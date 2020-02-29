@@ -21,9 +21,17 @@
       </el-menu-item>
       <el-menu-item index="/one">
         <i class="el-icon-setting"></i>
-        <span slot="title">大资源分类</span>
+        <span slot="title">一级资源列表</span>
       </el-menu-item>
-      <el-menu-item index="6">
+      <el-menu-item index="/one">
+        <i class="el-icon-setting"></i>
+        <span slot="title">二级资源列表</span>
+      </el-menu-item>
+      <el-menu-item index="/one">
+        <i class="el-icon-setting"></i>
+        <span slot="title">账号资源列表</span>
+      </el-menu-item>
+      <el-menu-item index="/one">
         <i class="el-icon-setting"></i>
         <span slot="title">资源列表</span>
       </el-menu-item>
@@ -35,7 +43,7 @@
 export default {
   data () {
     return {
-      isCollapse: true
+      isCollapse: false
     }
   },
   methods: {

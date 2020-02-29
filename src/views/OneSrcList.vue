@@ -1,5 +1,12 @@
 <template>
-  <div>
+  <div class="content-warp">
+    <div class="top-wrap">
+      <el-input v-model="inputOneSrc" placeholder="请输入内容" label="组名称" clearable>
+        <template slot="prepend">分类名称：</template>
+      </el-input>
+      <el-button type="primary" size="mini" class="admin-btn" @click="query">查询</el-button>
+      <el-button type="success" size="mini" class="admin-btn" @click="handleAdd">添加</el-button>
+    </div>
     <el-table
       ref="multipleTable"
       :data="one_src"
@@ -56,22 +63,18 @@
         </div>
       </div>
       <el-form :model="one_src_info" v-else-if="title === '编辑'" :rules="rules" ref="one_src_info" class="form-center">
-        <el-form-item label="分类名称" label-width="100px" prop="login_name">
+        <el-form-item label="分类名称" label-width="100px" prop="name">
           <el-input v-model="one_src_info.name" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="详情描述" label-width="100px" prop="pwd">
+        <el-form-item label="详情描述" label-width="100px" prop="desc">
           <el-input v-model="one_src_info.desc" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="排序序号" label-width="100px" prop="pwd">
+        <el-form-item label="排序序号" label-width="100px" prop="pos">
           <el-input v-model="one_src_info.pos" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-checkbox-group v-model="one_src_info.groups">
-            <el-checkbox label="复选框 A">aaa</el-checkbox>
-            <el-checkbox label="复选框 B"></el-checkbox>
-            <el-checkbox label="复选框 C"></el-checkbox>
-            <el-checkbox label="禁用" disabled></el-checkbox>
-            <el-checkbox label="选中且禁用" disabled></el-checkbox>
+          <el-checkbox-group v-model="edit_groups">
+            <el-checkbox :label="g.id" v-for="g in user_groups" :key="g.id">{{g.name}}</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
         <el-form-item class="foot">
@@ -84,6 +87,8 @@
 </template>
 
 <script>
+import qs from 'qs'
+
 export default {
   name: 'GroupList',
   data () {
@@ -96,18 +101,19 @@ export default {
         groups: [],
         name: '',
         pos: 0,
-        edit_groups: []
       },
+      edit_groups: [],
       rules: {
-        login_name: [
-          { required: true, message: '请输入登录名', trigger: 'blur' },
-          { min: 5, max: 18, message: '长度在 5 到 18 个字符', trigger: 'blur' }
+        name: [
+          { required: true, message: '输入资源名', trigger: 'blur' },
+          { min: 2, max: 25, message: '长度在 2 到 25 个字符', trigger: 'blur' }
         ],
-        pwd: [
-          { required: true, message: '请输入密码', trigger: 'blur' },
-          { min: 6, max: 18, message: '长度在 6 到 18 个字符', trigger: 'blur' }
+        pos: [
+          { required: true, message: '输入位置序号', trigger: 'blur' },
         ],
       },
+      id: '', // 当前编辑id
+      inputOneSrc: ''
     }
   },
   mounted () {
@@ -120,7 +126,7 @@ export default {
       // 发送请求获取详情数据
       await this.$http.getOneSrcInfo(row.id).then(res => {
         this.one_src_info = res.data
-        this.one_src_info.edit_groups = this.one_src_info.groups.map(obj => {
+        this.edit_groups = res.data.groups.map(obj => {
           return obj.id
         })
       }).catch(err => {
@@ -128,18 +134,17 @@ export default {
       })
     },
     async handleEdit (index, row) {
-      if (!this.one_src_info.name) {
-        await this.$http.getOneSrcInfo(row.id).then(res => {
-          this.one_src_info = res.data
-          this.one_src_info.edit_groups = this.one_src_info.groups.map(obj => {
-            return obj.id
-          })
-        }).catch(err => {
-          console.log(err, 'err')
+      await this.$http.getOneSrcInfo(row.id).then(res => {
+        this.one_src_info = res.data
+        this.edit_groups = res.data.groups.map(obj => {
+          return obj.id
         })
-      }
+      }).catch(err => {
+        console.log(err, 'err')
+      })
       this.title = '编辑'
       this.dialogFormVisible = true
+      this.id = row.id
     },
     handleDelete (index, row) {
       console.log('删除')
@@ -150,6 +155,8 @@ export default {
     onSubmit (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          this.one_src_info.groups = JSON.stringify(this.edit_groups)
+          this.one_src_info.id = this.id
           this.$http.postUpdateOneSrc(qs.stringify(this.one_src_info)).then(res => {
             if (res.code === 200) {
               this.$store.dispatch('action_get_one_src')
@@ -176,6 +183,26 @@ export default {
           return false
         }
       })
+    },
+    query () {
+      // 查询
+      this.$http.queryOneSrc(this.inputOneSrc).then(res => {
+        if (res.code === 200) {
+          this.$message({
+            message: '查询成功',
+            center: true,
+            type: 'success',
+            customClass: 'hint-message'
+          })
+          this.$store.commit('RECEIVE_ONE_SRC', res.data)
+        }
+      }).catch(err => {
+        console.log(err, 'err')
+      })
+      this.inputOneSrc = ''
+    },
+    handleAdd () {
+      // 添加
     }
   },
   computed: {
@@ -186,14 +213,27 @@ export default {
           return item
         })
       }
+    },
+    user_groups: {
+      get () {
+        if (!this.$store.getters.groups.length) {
+          this.$store.dispatch('getGroups')
+        }
+        return this.$store.getters.groups
+      }
     }
   }
 }
 </script>
 
 <style scoped>
+  .top {
+    display: flex;
+    line-height: 30px;
+  }
+
   .el-input {
-    width: 200px;
+    width: 300px;
   }
 </style>
 <style>

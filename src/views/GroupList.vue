@@ -1,5 +1,12 @@
 <template>
-  <div>
+  <div class="content-warp">
+    <div class="top-wrap">
+      <el-input v-model="inputGroupName" placeholder="请输入内容" label="组名称" clearable>
+        <template slot="prepend">组名称：</template>
+      </el-input>
+      <el-button type="primary" size="mini" class="admin-btn" @click="query">查询</el-button>
+      <el-button type="success" size="mini" class="admin-btn" @click="handleAdd">添加</el-button>
+    </div>
     <el-table
       ref="multipleTable"
       :data="groups"
@@ -13,23 +20,13 @@
       <el-table-column
         prop="key"
         label="序号"
-        width="120">
+        width="300">
         <!--        <template slot-scope="scope">{{ scope.row.date }}</template>-->
       </el-table-column>
       <el-table-column
-        prop="login_name"
-        label="姓名"
-        width="120">
-      </el-table-column>
-      <el-table-column
-        prop="username"
-        label="姓名"
-        show-overflow-tooltip>
-      </el-table-column>
-      <el-table-column
-        prop="role_name"
-        label="角色"
-        show-overflow-tooltip>
+        prop="name"
+        label="分组名"
+      >
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
@@ -49,15 +46,207 @@
         </template>
       </el-table-column>
     </el-table>
+    <el-dialog :title="title" :visible.sync="dialogFormVisible">
+      <el-form :model="groupInfo" v-if="title === '编辑'" :rules="rules" ref="groupInfo">
+        <el-form-item label="组名称" label-width="100px" prop="name">
+          <el-input v-model="groupInfo.name" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="描述" label-width="100px" prop="desc">
+          <el-input v-model="groupInfo.desc" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="putSubmit('groupInfo')">修改</el-button>
+          <el-button>重置</el-button>
+        </el-form-item>
+      </el-form>
+      <div v-else-if="title === '查看'">
+        <el-divider>组名称:{{groupInfo.name}}</el-divider>
+        <el-divider>描述: {{groupInfo.desc}}</el-divider>
+      </div>
+      <el-form :model="groupAddInfo" v-else :rules="rules" ref="groupAddInfo">
+        <el-form-item label="组名称" label-width="100px" prop="login_name">
+          <el-input v-model="groupAddInfo.name" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="描述" label-width="100px" prop="pwd">
+          <el-input v-model="groupAddInfo.desc" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="AddSubmit('groupAddInfo')">添加</el-button>
+          <el-button>重置</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import qs from 'qs'
+
 export default {
-  name: 'GroupList'
+  name: 'GroupList',
+  data () {
+    return {
+      multipleSelection: [],
+      dialogFormVisible: false,
+      inputGroupName: '',
+      title: '',
+      groupInfo: {
+        name: '',
+        desc: ''
+      },
+      groupAddInfo: {
+        name: '',
+        desc: ''
+      },
+      rules: {
+        name: [
+          { required: true, message: '请输入分组名', trigger: 'blur' },
+          { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }
+        ],
+        desc: [
+          { required: false, message: '请输入描述', trigger: 'blur' },
+          { max: 500, message: '最长500个字符', trigger: 'blur' }
+        ],
+      },
+    }
+  },
+  async mounted () {
+    await this.$store.dispatch('getGroups')
+  },
+  methods: {
+    handleSelectionChange (val) {
+      this.multipleSelection = val
+    },
+    async handleView (index, row) {
+      this.title = '查看'
+      this.dialogFormVisible = true
+      // 发送请求获取详情数据
+      await this.$http.getGroupsInfoApi(row.id).then(res => {
+        this.groupInfo = res.data
+      }).catch(err => {
+        console.log(err, 'err')
+      })
+    },
+    query () {
+      this.$store.dispatch('query', this.inputGroupName)
+      this.$message({
+        message: '查询成功',
+        center: true,
+        type: 'success',
+        customClass: 'hint-message'
+      })
+      this.inputGroupName = ''
+    },
+    handleAdd () {
+      this.title = '添加分组'
+      this.dialogFormVisible = true
+    },
+    AddSubmit (formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.$http.postGroupApi(qs.stringify(this.groupAddInfo)).then(res => {
+            if (res.code === 200) {
+              this.$store.dispatch('getGroups')
+              this.dialogFormVisible = false
+              this.$message({
+                message: '更新成功',
+                center: true,
+                type: 'success',
+                customClass: 'hint-message'
+              })
+
+            } else {
+              this.$message({
+                message: res.msg,
+                center: true,
+                type: 'error',
+                customClass: 'hint-message'
+              })
+            }
+          }).catch(err => {
+            console.log(err, 'err')
+          })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+        Object.keys(this.groupAddInfo).forEach(key => this.groupAddInfo[key] = '')
+      })
+    },
+    handleEdit (index, row) {
+      this.title = '编辑'
+      this.dialogFormVisible = true
+      // 发送请求获取详情数据
+      this.$http.getGroupsInfoApi(row.id).then(res => {
+        this.groupInfo = res.data
+      }).catch(err => {
+        console.log(err, 'err')
+      })
+    },
+    putSubmit (formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.$http.putGroupApi(qs.stringify(this.groupInfo)).then(res => {
+            if (res.code === 200) {
+              this.$store.dispatch('getGroups')
+              this.dialogFormVisible = false
+              this.$message({
+                message: '更新成功',
+                center: true,
+                type: 'success',
+                customClass: 'hint-message'
+              })
+
+            } else {
+              this.$message({
+                message: res.msg,
+                center: true,
+                type: 'error',
+                customClass: 'hint-message'
+              })
+            }
+          }).catch(err => {
+            console.log(err, 'err')
+          })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    }
+  },
+  computed: {
+    groups: {
+      get () {
+        return this.$store.getters.groups.map((item, index) => {
+          item['key'] = index + 1
+          return item
+        })
+      }
+    }
+  }
 }
 </script>
 
 <style scoped>
+  .content {
+    margin: 20px 0;
+  }
 
+  .el-input {
+    width: 300px;
+  }
+
+  .top {
+    width: 60%;
+    margin: 30px 0 20px 0;
+    display: flex;
+    line-height: 30px;
+    justify-content: left;
+    padding-left: 10px;
+  }
+
+  .btn {
+    margin-left: 10px;
+  }
 </style>

@@ -1,10 +1,12 @@
 <template>
-  <div class="content">
-    <div class="top">
-      登录名：
-      <el-input class="admin" v-model="input_login_name" placeholder="请输入内容" clearable></el-input>
-      用户名：
-      <el-input class="admin" v-model="input_user_name" placeholder="请输入内容" clearable></el-input>
+  <div class="content-warp">
+    <div class="top-wrap">
+      <el-input v-model="input_login_name" placeholder="请输入内容" label="登录名" clearable>
+        <template slot="prepend">登录名：</template>
+      </el-input>
+      <el-input v-model="input_user_name" placeholder="请输入内容" label="用户名" clearable>
+        <template slot="prepend">用户名：</template>
+      </el-input>
       <el-button type="primary" size="mini" class="admin-btn" @click="query">查询</el-button>
       <el-button type="success" size="mini" class="admin-btn" @click="handleAdd">添加</el-button>
     </div>
@@ -274,27 +276,26 @@ export default {
 </script>
 
 <style scoped>
-  .content {
-    margin: 20px 0;
-  }
-
-  .top {
-    display: flex;
-    line-height: 30px;
-  }
-
   .el-input {
-    width: 200px;
+    width: 300px;
   }
-
 </style>
 
 <style>
-  .admin .el-input__inner {
+  .admin-warp .el-input__inner {
     height: 30px;
   }
 
   .admin-btn {
     height: 30px;
+  }
+
+  .content-warp {
+    margin: 20px 0;
+  }
+
+  .top-warp {
+    display: flex;
+    line-height: 30px;
   }
 </style>

@@ -31,7 +31,7 @@ export const getInfo = (back = 'back') => ajax.get(`/api/user/get_token_info/?ba
 export const getImgCode = () => ajax.get(`/api/user/captcha/?time=${new Date().getTime()}`)
 // 获取管理员列表
 export const getAdmins = () => ajax.get(`/api/user/get_admins/`)
-// 获取单个管理员数据
+// 获取单个管理员数据;;
 export const getAdminInfo = (id) => ajax.get(`/api/user/get_admins/?id=${id}`)
 // 修改单条管理员数据
 export const postUpdateAdmin = (data) => ajax.post('/api/user/update_admin/', data)
@@ -39,6 +39,15 @@ export const postUpdateAdmin = (data) => ajax.post('/api/user/update_admin/', da
 export const postAddAdmin = (data) => ajax.post('/api/user/add_admin/', data)
 // 根据条件查询数据
 export const getQuery = (k1, k2) => ajax.get(`/api/user/query_admin/?login_name=${k1}&user_name=${k2}`)
+// ===================会员分组=================
+// 获取会员分组列表
+export const getGroupsApi = (name = null) => ajax.get(name ? `/api/user/get_to_name_info/?name=${name}` : '/api/user/get_to_name_info/')
+//获取会员分组详情
+export const getGroupsInfoApi = (id) => ajax.get(`/api/user/get_group_info/?id=${id}`)
+//修改会员分组
+export const putGroupApi = (params) => ajax.post(`/api/user/update_group/`, params)
+//添加会员分组
+export const postGroupApi = (params) => ajax.post(`/api/user/add_group/`, params)
 // ===================资源=====================
 // 一级资源
 export const getOneSrc = () => ajax.get(`/api/src/get_one_src_info/`)
@@ -46,3 +55,5 @@ export const getOneSrc = () => ajax.get(`/api/src/get_one_src_info/`)
 export const getOneSrcInfo = (id) => ajax.get(`/api/src/get_one_src_info/?id=${id}`)
 // 修改一级分类资源
 export const postUpdateOneSrc = (data) => ajax.post(`/api/src/update_one_src/`, data)
+// 查询一级资源
+export const queryOneSrc = (name) => ajax.get(`/api/src/get_to_name_one_src/?name=${name}`)
