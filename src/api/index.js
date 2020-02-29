@@ -39,3 +39,10 @@ export const postUpdateAdmin = (data) => ajax.post('/api/user/update_admin/', da
 export const postAddAdmin = (data) => ajax.post('/api/user/add_admin/', data)
 // 根据条件查询数据
 export const getQuery = (k1, k2) => ajax.get(`/api/user/query_admin/?login_name=${k1}&user_name=${k2}`)
+// ===================资源=====================
+// 一级资源
+export const getOneSrc = () => ajax.get(`/api/src/get_one_src_info/`)
+// 获取一级资源的详情
+export const getOneSrcInfo = (id) => ajax.get(`/api/src/get_one_src_info/?id=${id}`)
+// 修改一级分类资源
+export const postUpdateOneSrc = (data) => ajax.post(`/api/src/update_one_src/`, data)

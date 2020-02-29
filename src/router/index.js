@@ -6,6 +6,7 @@ import SystemConfig from '@/views/SystemConfig.vue'
 import AdminList from '@/views/AdminList.vue'
 import UserList from '@/views/UserList.vue'
 import GroupList from '@/views/GroupList.vue'
+import OneSrcList from '@/views/OneSrcList.vue'
 
 Vue.use(VueRouter)
 
@@ -57,6 +58,14 @@ const routes = [
     component: UserList,
     meta: {
       title: '会员列表'
+    }
+  },
+  {
+    path: '/one',
+    name: 'one',
+    component: OneSrcList,
+    meta: {
+      title: '大资源分类'
     }
   }
 ]

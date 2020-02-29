@@ -74,7 +74,7 @@
         <el-form-item label="角色名" label-width="100px">
           <el-input v-model="admin_info.role_name" autocomplete="off" :disabled="true"></el-input>
         </el-form-item>
-        <el-form-item>
+        <el-form-item class="foot">
           <el-button type="primary" @click="onSubmit('admin_info')">修改</el-button>
           <el-button>取消</el-button>
         </el-form-item>

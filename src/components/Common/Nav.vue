@@ -19,9 +19,9 @@
         <i class="el-icon-setting"></i>
         <span slot="title">会员列表</span>
       </el-menu-item>
-      <el-menu-item index="5">
+      <el-menu-item index="/one">
         <i class="el-icon-setting"></i>
-        <span slot="title">资源分类列表</span>
+        <span slot="title">大资源分类</span>
       </el-menu-item>
       <el-menu-item index="6">
         <i class="el-icon-setting"></i>
