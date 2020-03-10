@@ -3,7 +3,8 @@ import Vuex from 'vuex'
 import getters from './getters'
 import admin from './modules/admin'
 import src from './modules/src'
-import groups from './modules/group'
+import group from './modules/group'
+import user from './modules/user'
 
 Vue.use(Vuex)
 
@@ -11,7 +12,8 @@ export default new Vuex.Store({
   modules: {
     admin,
     src,
-    groups
+    group,
+    user
   },
   getters
 })

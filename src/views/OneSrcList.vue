@@ -52,6 +52,7 @@
         </template>
       </el-table-column>
     </el-table>
+    <Pagination :total="one_src_count" :type="'one_src'"/>
     <el-dialog :title="title" :visible.sync="dialogFormVisible" width="30%" :destroy-on-close="true">
       <div v-if="title === '查看'">
         <el-divider>资源名称:{{one_src_info.name}}</el-divider>
@@ -88,6 +89,7 @@
 
 <script>
 import qs from 'qs'
+import Pagination from '../components/Common/Pagination'
 
 export default {
   name: 'GroupList',
@@ -116,8 +118,10 @@ export default {
       inputOneSrc: ''
     }
   },
+  components: { Pagination },
   mounted () {
-    this.$store.dispatch('action_get_one_src')
+    this.$store.dispatch('action_get_one_src', 1)
+    this.$store.dispatch('action_get_one_src_count')
   },
   methods: {
     async handleView (index, row) {
@@ -159,7 +163,7 @@ export default {
           this.one_src_info.id = this.id
           this.$http.postUpdateOneSrc(qs.stringify(this.one_src_info)).then(res => {
             if (res.code === 200) {
-              this.$store.dispatch('action_get_one_src')
+              this.$store.dispatch('action_get_one_src',1)
               this.dialogFormVisible = false
               this.$message({
                 message: '更新成功',
@@ -221,6 +225,9 @@ export default {
         }
         return this.$store.getters.groups
       }
+    },
+    one_src_count () {
+      return this.$store.getters.one_src_count
     }
   }
 }

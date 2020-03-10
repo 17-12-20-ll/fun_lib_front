@@ -7,7 +7,6 @@ const mutations = {
   receiveGroups (state, data) {
     state.groups = data
   },
-
 }
 const actions = {
   getGroups ({ commit }) {

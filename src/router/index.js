@@ -7,6 +7,9 @@ import AdminList from '@/views/AdminList.vue'
 import UserList from '@/views/UserList.vue'
 import GroupList from '@/views/GroupList.vue'
 import OneSrcList from '@/views/OneSrcList.vue'
+import TwoSrcList from '@/views/TwoSrcList.vue'
+import ThreeSrcList from '@/views/ThreeSrcList.vue'
+import FourSrcList from '@/views/FourSrcList.vue'
 
 Vue.use(VueRouter)
 
@@ -34,8 +37,7 @@ const routes = [
     meta: {
       title: '系统配置'
     }
-  }
-  ,
+  },
   {
     path: '/admins',
     name: 'admins',
@@ -65,9 +67,33 @@ const routes = [
     name: 'one',
     component: OneSrcList,
     meta: {
-      title: '大资源分类'
+      title: '一级资源分类'
     }
-  }
+  },
+  {
+    path: '/two',
+    name: 'two',
+    component: TwoSrcList,
+    meta: {
+      title: '二级资源分类'
+    }
+  },
+  {
+    path: '/three',
+    name: 'three',
+    component: ThreeSrcList,
+    meta: {
+      title: '资源列表入口'
+    }
+  },
+  {
+    path: '/four',
+    name: 'four',
+    component: FourSrcList,
+    meta: {
+      title: '账号信息管理'
+    }
+  },
 ]
 
 const router = new VueRouter({

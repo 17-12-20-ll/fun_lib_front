@@ -15,7 +15,7 @@
         <i class="el-icon-document"></i>
         <span slot="title">会员分类列表</span>
       </el-menu-item>
-      <el-menu-item index="4">
+      <el-menu-item index="users">
         <i class="el-icon-setting"></i>
         <span slot="title">会员列表</span>
       </el-menu-item>
@@ -23,17 +23,17 @@
         <i class="el-icon-setting"></i>
         <span slot="title">一级资源列表</span>
       </el-menu-item>
-      <el-menu-item index="/one">
+      <el-menu-item index="/two">
         <i class="el-icon-setting"></i>
         <span slot="title">二级资源列表</span>
       </el-menu-item>
-      <el-menu-item index="/one">
+      <el-menu-item index="/four">
         <i class="el-icon-setting"></i>
         <span slot="title">账号资源列表</span>
       </el-menu-item>
-      <el-menu-item index="/one">
+      <el-menu-item index="/three">
         <i class="el-icon-setting"></i>
-        <span slot="title">资源列表</span>
+        <span slot="title">资源入口列表</span>
       </el-menu-item>
     </el-menu>
   </div>

@@ -147,9 +147,9 @@ export default {
       input_user_name: ''
     }
   },
-  async mounted () {
+  mounted () {
     // 获取管理员列表
-    await this.$store.dispatch('action_get_admins')
+    this.$store.dispatch('action_get_admins')
   },
   methods: {
     toggleSelection (rows) {
@@ -292,10 +292,5 @@ export default {
 
   .content-warp {
     margin: 20px 0;
-  }
-
-  .top-warp {
-    display: flex;
-    line-height: 30px;
   }
 </style>
