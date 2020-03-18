@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import Pagination from '../components/Common/Pagination'
+import Pagination from '../../../components/Common/Pagination'
 
 export default {
   name: 'AdminLog',

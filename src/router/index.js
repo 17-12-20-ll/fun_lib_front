@@ -1,32 +1,14 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '@/views/Home.vue'
-import Login from '@/views/Login.vue'
-import SystemConfig from '@/views/SystemConfig.vue'
-import AdminList from '@/views/AdminList.vue'
-import UserList from '@/views/UserList.vue'
-import GroupList from '@/views/GroupList.vue'
-import OneSrcList from '@/views/OneSrcList.vue'
-import TwoSrcList from '@/views/TwoSrcList.vue'
-import ThreeSrcList from '@/views/ThreeSrcList.vue'
-import FourSrcList from '@/views/FourSrcList.vue'
-import TradeTypeList from '@/views/TradeTypeList.vue'
-import CardTradeList from '@/views/CardTradeList.vue'
-import AdminLog from '@/views/AdminLog.vue'
-import FinancialManager from '@/views/FinancialManager.vue'
-import UserOperation from '@/views/UserOperation.vue'
+import Home from '@/views/home/Home.vue'
+import Member from '@/views/member/Member.vue'
+import Login from '@/views/member/user/Login.vue'
+import Website from '../views/Website/WebsiteIndex.vue'
+import Site from '../views/SiteAdmin/SiteIndex.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
-  {
-    path: '/',
-    name: 'home',
-    component: Home,
-    meta: {
-      title: '首页-管理后台'
-    }
-  },
   {
     path: '/login',
     name: 'login',
@@ -36,109 +18,147 @@ const routes = [
     }
   },
   {
-    path: '/config',
-    name: 'config',
-    component: SystemConfig,
+    path: '/',
+    name: 'home',
+    component: Home,
+    // redirect: '/home/dashboard',
     meta: {
-      title: '系统配置'
-    }
+      title: '首页-崇研科技'
+    },
+  },
+  // 会员管理
+  {
+    path: '/member',
+    name: 'member',
+    component: Member,
+    redirect: '/member/config',
+    meta: {
+      title: '用户-崇研科技'
+    },
+    children: [
+      {
+        path: '/member/config',
+        name: 'config',
+        component: () => import('@/views/member/admin/SystemConfig'),
+        meta: {
+          title: '系统配置'
+        }
+      },
+      {
+        path: '/member/admins',
+        name: 'admins',
+        component: () => import('@/views/member/admin/AdminList'),
+        meta: {
+          title: '管理员列表'
+        }
+      },
+      {
+        path: '/member/groups',
+        name: 'groups',
+        component: () => import('@/views/member/user/GroupList'),
+        meta: {
+          title: '会员分类列表'
+        }
+      },
+      {
+        path: '/member/users',
+        name: 'users',
+        component: () => import('@/views/member/user/UserList'),
+        meta: {
+          title: '会员列表'
+        }
+      },
+      {
+        path: '/member/one',
+        name: 'one',
+        component: () => import('@/views/member/src/OneSrcList'),
+        meta: {
+          title: '一级资源分类'
+        }
+      },
+      {
+        path: '/member/two',
+        name: 'two',
+        component: () => import('@/views/member/src/TwoSrcList'),
+        meta: {
+          title: '二级资源分类'
+        }
+      },
+      {
+        path: '/member/three',
+        name: 'three',
+        component: () => import('@/views/member/src/ThreeSrcList'),
+        meta: {
+          title: '资源列表入口'
+        }
+      },
+      {
+        path: '/member/four',
+        name: 'four',
+        component: () => import('@/views/member/src/FourSrcList'),
+        meta: {
+          title: '账号信息管理'
+        }
+      },
+      {
+        path: '/member/tradetype',
+        name: 'tradetype',
+        component: () => import('@/views/member/trade/TradeTypeList.vue'),
+        meta: {
+          title: '交易类型管理'
+        }
+      },
+      {
+        path: '/member/cardtrade',
+        name: 'cardtrade',
+        component: () => import('@/views/member/trade/CardTradeList.vue'),
+        meta: {
+          title: '交易卡密管理'
+        }
+      },
+      {
+        path: '/member/adminlog',
+        name: 'adminlog',
+        component: () => import('@/views/member/admin/AdminLog.vue'),
+        meta: {
+          title: '交易卡密管理'
+        }
+      },
+      {
+        path: '/member/financialmanager',
+        name: 'financialmanager',
+        component: () => import('@/views/member/admin/FinancialManager.vue'),
+        meta: {
+          title: '财务管理'
+        }
+      },
+      {
+        path: '/member/useroperation',
+        name: 'useroperation',
+        component: () => import('@/views/member/user/UserOperation.vue'),
+        meta: {
+          title: '用户行为监控'
+        }
+      },
+    ]
+  },
+  // 网站管理
+  {
+    path: '/website',
+    name: 'website',
+    component: Website,
+    meta: {
+      title: '网站管理'
+    },
   },
   {
-    path: '/admins',
-    name: 'admins',
-    component: AdminList,
+    path: '/site',
+    name: 'site',
+    component: Site,
     meta: {
-      title: '管理员列表'
-    }
-  },
-  {
-    path: '/groups',
-    name: 'groups',
-    component: GroupList,
-    meta: {
-      title: '分组列表'
-    }
-  },
-  {
-    path: '/users',
-    name: 'users',
-    component: UserList,
-    meta: {
-      title: '会员列表'
-    }
-  },
-  {
-    path: '/one',
-    name: 'one',
-    component: OneSrcList,
-    meta: {
-      title: '一级资源分类'
-    }
-  },
-  {
-    path: '/two',
-    name: 'two',
-    component: TwoSrcList,
-    meta: {
-      title: '二级资源分类'
-    }
-  },
-  {
-    path: '/three',
-    name: 'three',
-    component: ThreeSrcList,
-    meta: {
-      title: '资源列表入口'
-    }
-  },
-  {
-    path: '/four',
-    name: 'four',
-    component: FourSrcList,
-    meta: {
-      title: '账号信息管理'
-    }
-  },
-  {
-    path: '/tradetype',
-    name: 'tradetype',
-    component: TradeTypeList,
-    meta: {
-      title: '充值类型列表'
-    }
-  },
-  {
-    path: '/cardtrade',
-    name: 'cardtrade',
-    component: CardTradeList,
-    meta: {
-      title: '卡密充值列表'
-    }
-  },
-  {
-    path: '/adminlog',
-    name: 'adminlog',
-    component: AdminLog,
-    meta: {
-      title: '管理员登陆日志'
-    }
-  },
-  {
-    path: '/financialmanager',
-    name: 'financialmanager',
-    component: FinancialManager,
-    meta: {
-      title: '财务管理'
-    }
-  },
-  {
-    path: '/useroperation',
-    name: 'useroperation',
-    component: UserOperation,
-    meta: {
-      title: '会员行为监控'
-    }
-  },
+      title: '站点管理'
+    },
+  }
 ]
 
 const router = new VueRouter({

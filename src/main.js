@@ -5,6 +5,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 import ElementUI from 'element-ui'
 import store from './store'
 import * as ajax from '@/api' // 引入axios的 ajax方法
+import './assets/scss/element-variables.scss'  // 修改主题
 
 // 把ajax挂载到全局
 Vue.prototype.$http = ajax

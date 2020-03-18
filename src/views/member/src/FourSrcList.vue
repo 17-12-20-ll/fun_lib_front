@@ -1,80 +1,66 @@
 <template>
   <div class="content-warp">
     <div class="top-wrap">
-      <el-input v-model="inputName" placeholder="请输入内容" label="组名称" clearable>
-        <template slot="prepend">标题：</template>
-      </el-input>
-      <el-input v-model="inputCode" placeholder="请输入内容" label="组名称" clearable>
-        <template slot="prepend">编码：</template>
-      </el-input>
-      <el-button type="primary" size="mini" class="admin-btn" @click="query">查询</el-button>
-      <el-button type="success" size="mini" class="admin-btn" @click="handleAdd">添加</el-button>
+      <div class="top-wrap_head head_input">
+        <el-input size="small" v-model="inputName" placeholder="请输入内容" label="组名称" clearable>
+          <template slot="prepend">标题：</template>
+        </el-input>
+        <el-input size="small" v-model="inputCode" placeholder="请输入内容" label="组名称" clearable>
+          <template slot="prepend">编码：</template>
+        </el-input>
+      </div>
+      <div class="head_btn">
+        <el-button type="primary" size="mini" class="admin-btn" @click="query">查询</el-button>
+        <el-button type="success" size="mini" class="admin-btn" @click="handleAdd">添加</el-button>
+      </div>
     </div>
-    <el-table
-      ref="multipleTable"
-      :data="fours"
-      tooltip-effect="dark"
-      style="width: 100%"
-      @selection-change="handleSelectionChange">
-      <el-table-column
-        type="selection"
-        width="55">
-      </el-table-column>
-      <el-table-column
-        prop="key"
-        label="序号"
-        width="120">
-        <!--        <template slot-scope="scope">{{ scope.row.date }}</template>-->
-      </el-table-column>
-      <el-table-column
-        prop="name"
-        label="链接名字"
-        width="120">
-      </el-table-column>
-      <el-table-column
-        prop="code"
-        label="编码"
-        show-overflow-tooltip>
-      </el-table-column>
-      <el-table-column
-        prop="url"
-        label="链接"
-        show-overflow-tooltip>
-      </el-table-column>
-      <el-table-column
-        prop="username"
-        label="账号"
-        show-overflow-tooltip>
-      </el-table-column>
-      <el-table-column
-        prop="pwd"
-        label="密码"
-        show-overflow-tooltip>
-      </el-table-column>
-      <el-table-column
-        prop="add_time"
-        label="添加时间"
-        show-overflow-tooltip>
-      </el-table-column>
-      <el-table-column label="操作">
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            @click="handleView(scope.$index, scope.row)">查看
-          </el-button>
-          <el-button
-            size="mini"
-            @click="handleEdit(scope.$index, scope.row)">编辑
-          </el-button>
-          <el-button
-            size="mini"
-            type="danger"
-            @click="handleDelete(scope.$index, scope.row)">删除
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <Pagination :total="four_src_count" :type="'four_src'"/>
+    <div class="table_content">
+      <el-table
+        ref="multipleTable"
+        :data="fours"
+        tooltip-effect="dark"
+        style="width: 100%"
+        @selection-change="handleSelectionChange"
+      >
+        <el-table-column type="selection" width="55"></el-table-column>
+        <el-table-column prop="key" label="序号" width="120">
+          <!--        <template slot-scope="scope">{{ scope.row.date }}</template>-->
+        </el-table-column>
+        <el-table-column prop="name" label="链接名字" width="120"></el-table-column>
+        <el-table-column prop="code" label="编码" width="120" ></el-table-column>
+        <el-table-column prop="url" label="链接" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="username" label="账号" width="180" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="pwd" label="密码" width="180" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="add_time" label="添加时间" show-overflow-tooltip></el-table-column>
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-button
+              size="mini"
+              type="primary"
+              plain
+              @click="handleView(scope.$index, scope.row)"
+            >查看
+            </el-button>
+            <el-button
+              size="mini"
+              type="success"
+              plain
+              @click="handleEdit(scope.$index, scope.row)"
+            >编辑
+            </el-button>
+            <el-button
+              size="mini"
+              type="danger"
+              plain
+              @click="handleDelete(scope.$index, scope.row)"
+            >删除
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <Pagination :total="four_src_count" :type="'four_src'"/>
+    </div>
+
     <el-dialog :title="title" :visible.sync="dialogFormVisible">
       <div v-if="title === '查看'">
         <el-divider>链接地址:{{four_info.name}}</el-divider>
@@ -131,7 +117,7 @@
 </template>
 
 <script>
-import Pagination from '../components/Common/Pagination'
+import Pagination from '@/components/Common/Pagination'
 import qs from 'qs'
 
 export default {
@@ -287,8 +273,10 @@ export default {
 }
 </script>
 
-<style scoped>
-  .el-input {
-    width: 300px;
+<style lang="scss" scoped>
+  .top-wrap {
+    &_head {
+      width: 35%;
+    }
   }
 </style>

@@ -1,8 +1,18 @@
 <template>
   <div class="content-warp">
-    <el-table
+    <div class="top-wrap">
+        <el-input size="small" v-model="inputName" placeholder="请输入内容" label="名称" clearable>
+          <template slot="prepend">名称：</template>
+        </el-input>
+      <div class="head_btn">
+        <el-button type="primary" size="mini" class="admin-btn" @click="query">查询</el-button>
+        <el-button type="success" size="mini" class="admin-btn" @click="handleAdd">添加</el-button>
+      </div>
+    </div>
+    <div class="table_content">
+      <el-table
       ref="multipleTable"
-      :data="trade_cards"
+      :data="trade_types"
       tooltip-effect="dark"
       style="width: 100%"
       @selection-change="handleSelectionChange">
@@ -16,64 +26,88 @@
         width="120">
       </el-table-column>
       <el-table-column
-        prop="trade_type"
-        label="充值类型"
+        prop="name"
+        label="名称"
         align="center">
       </el-table-column>
       <el-table-column
-        prop="group"
-        label="分组权限"
-        width="300"
-        align="center"
-        show-overflow-tooltip>
-      </el-table-column>
-      <el-table-column
-        prop="card_id"
-        label="卡号"
+        prop="price"
+        label="价格"
         width="120"
         show-overflow-tooltip>
       </el-table-column>
       <el-table-column
-        prop="card_pwd"
-        label="卡密"
+        prop="days"
+        label="天数"
         width="120"
         show-overflow-tooltip>
-      </el-table-column>
-      <el-table-column
-        label="是否可用"
-        width="120"
-        show-overflow-tooltip>
-        <template slot-scope="scope"> {{scope.row.is_use?'否':'是'}}</template>
       </el-table-column>
       <el-table-column label="操作" width="300">
         <template slot-scope="scope">
           <el-button
             size="mini"
+            type="primary"
+            plain
             @click="handleEdit(scope.$index, scope.row)">编辑
           </el-button>
           <el-button
             size="mini"
             type="danger"
+            plain
             @click="handleDelete(scope.$index, scope.row)">删除
           </el-button>
         </template>
       </el-table-column>
     </el-table>
-    <Pagination :total="trade_card_count" :type="'trade_card'"/>
+    </div>
+    <el-dialog :title="title" :visible.sync="dialogFormVisible" width="30%" :destroy-on-close="true">
+      <el-form :model="trade_type_info" ref="trade_type_info" class="form-center">
+        <el-form-item label="权限分组" label-width="100px">
+          <el-select v-model="trade_type_info.group" placeholder="请选择资源类型">
+            <el-option :label="g.name" :value="g.id" v-for="g in groups" :key="g.id"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="金额" label-width="100px">
+          <el-input-number v-model="trade_type_info.price" autocomplete="off"></el-input-number>
+        </el-form-item>
+        <el-form-item label="名称" label-width="100px">
+          <el-input v-model="trade_type_info.name" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="天数" label-width="100px">
+          <el-input-number v-model="trade_type_info.days" autocomplete="off"></el-input-number>
+        </el-form-item>
+        <el-form-item class="foot">
+          <el-button type="primary" v-if="title === '编辑'" @click="onSubmit('trade_type_info')">
+            修改
+          </el-button>
+          <el-button type="primary" @click="AddSubmit('trade_type_info')">
+            添加
+          </el-button>
+          <el-button>取消</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import qs from 'qs'
-import Pagination from '../components/Common/Pagination'
 
 export default {
-  name: 'CardTradeList',
+  name: 'TradeTypeList',
   data () {
-    return {}
-  },
-  components: {
-    Pagination
+    return {
+      inputName: '',
+      multipleSelection: [],
+      dialogFormVisible: false,
+      trade_type_info: {
+        group: '',
+        price: '',
+        name: '',
+        days: '',
+      },
+      title: ''
+    }
   },
   methods: {
     toggleSelection (rows) {
@@ -173,23 +207,33 @@ export default {
     }
   },
   mounted () {
-    this.$store.dispatch('action_get_trade_cards', 1)
-    this.$store.dispatch('action_get_trade_card_count')
+    this.$store.dispatch('action_get_trade_types')
   },
   computed: {
-    trade_cards () {
-      return this.$store.getters.trade_cards.map((item, index) => {
+    trade_types () {
+      return this.$store.getters.trade_types.map((item, index) => {
         item['key'] = index + 1
         return item
       })
     },
-    trade_card_count () {
-      return this.$store.getters.trade_card_count
+    groups () {
+      let tmp = this.$store.getters.groups
+      if (tmp.length === 0) {
+        this.$store.dispatch('getGroups')
+      }
+      return this.$store.getters.groups
     }
   }
 }
 </script>
 
 <style scoped>
-
+  .el-input {
+    width: 300px;
+  }
+</style>
+<style>
+  .foot .el-form-item__content {
+    text-align: center;
+  }
 </style>

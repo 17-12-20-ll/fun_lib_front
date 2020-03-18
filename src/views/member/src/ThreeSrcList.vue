@@ -49,22 +49,22 @@
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button
-            size="mini"
+            size="mini" type="primary" plain
             @click="handleView(scope.$index, scope.row)">查看
           </el-button>
           <el-button
-            size="mini"
+            size="mini" type="success" plain
             @click="handleEdit(scope.$index, scope.row)">编辑
           </el-button>
           <el-button
-            size="mini"
-            type="danger"
+            size="mini" type="danger" plain
             @click="handleDelete(scope.$index, scope.row)">删除
           </el-button>
         </template>
       </el-table-column>
     </el-table>
     <Pagination :total="three_src_count" :type="'three_src'"/>
+    <!-- 模态 -->
     <el-dialog :title="title" :visible.sync="dialogFormVisible">
       <div v-if="title === '查看'">
         <el-divider>资源名:{{three_info.name}}</el-divider>
@@ -108,7 +108,7 @@
 </template>
 
 <script>
-import Pagination from '../components/Common/Pagination'
+import Pagination from '@/components/Common/Pagination'
 import qs from 'qs'
 
 export default {

@@ -1,67 +1,48 @@
 <template>
-  <div class="content-warp">
-    <div class="top-wrap">
-      <el-input v-model="input_login_name" placeholder="请输入内容" label="登录名" clearable>
-        <template slot="prepend">登录名：</template>
-      </el-input>
-      <el-input v-model="input_user_name" placeholder="请输入内容" label="用户名" clearable>
-        <template slot="prepend">用户名：</template>
-      </el-input>
-      <el-button type="primary" size="mini" class="admin-btn" @click="query">查询</el-button>
-      <el-button type="success" size="mini" class="admin-btn" @click="handleAdd">添加</el-button>
+  <div class="admin_warp">
+    <div class="admin_warp_top">
+      <div class="admin_warp_top_input head_input">
+        <el-input size="small" v-model="input_login_name" placeholder="请输入内容" label="登录名" clearable>
+          <template slot="prepend">登录名：</template>
+        </el-input>
+        <el-input size="small" v-model="input_user_name" placeholder="请输入内容" label="用户名" clearable>
+          <template slot="prepend">用户名：</template>
+        </el-input>
+      </div>
+      <div class="head_btn">
+        <el-button type="primary" size="mini" class="admin-btn" @click="query">查询</el-button>
+        <el-button type="success" size="mini" class="admin-btn" @click="handleAdd">添加</el-button>
+      </div>
     </div>
-    <el-table
-      ref="multipleTable"
-      :data="admins"
-      tooltip-effect="dark"
-      style="width: 100%"
-      @selection-change="handleSelectionChange">
-      <el-table-column
-        type="selection"
-        width="55">
-      </el-table-column>
-      <el-table-column
-        prop="key"
-        label="序号"
-        width="120">
-        <!--        <template slot-scope="scope">{{ scope.row.date }}</template>-->
-      </el-table-column>
-      <el-table-column
-        prop="login_name"
-        label="姓名"
-        width="120">
-      </el-table-column>
-      <el-table-column
-        prop="username"
-        label="姓名"
-        show-overflow-tooltip>
-      </el-table-column>
-      <el-table-column
-        prop="role_name"
-        label="角色"
-        show-overflow-tooltip>
-      </el-table-column>
-      <el-table-column label="操作">
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            @click="handleView(scope.$index, scope.row)">查看
-          </el-button>
-          <el-button
-            size="mini"
-            @click="handleEdit(scope.$index, scope.row)">编辑
-          </el-button>
-          <el-button
-            size="mini"
-            type="danger"
-            @click="handleDelete(scope.$index, scope.row)">删除
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <div style="margin-top: 20px">
-      <el-button @click="toggleSelection()">批量删除</el-button>
+    <div class="table_content">
+      <el-table
+        ref="multipleTable"
+        :data="admins"
+        tooltip-effect="dark"
+        style="width: 100%"
+        @selection-change="handleSelectionChange"
+      >
+        <el-table-column type="selection" width="55"></el-table-column>
+        <el-table-column prop="key" label="序号" width="160">
+          <!--        <template slot-scope="scope">{{ scope.row.date }}</template>-->
+        </el-table-column>
+        <el-table-column prop="login_name" label="登录名" width="200"></el-table-column>
+        <el-table-column prop="username" label="姓名" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="role_name" label="角色" show-overflow-tooltip></el-table-column>
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-button size="mini" type="primary" plain @click="handleView(scope.$index, scope.row)">查看</el-button>
+            <el-button size="mini" type="success" plain @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+            <el-button size="mini" type="danger" plain @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
     </div>
+
+    <div class="admin_warp_allbtn">
+      <el-button size="small" @click="toggleSelection()">批量删除</el-button>
+    </div>
+    <!-- 模态 -->
     <el-dialog :title="title" :visible.sync="dialogFormVisible">
       <el-form :model="admin_info" v-if="title === '编辑'" :rules="rules" ref="admin_info">
         <el-form-item label="登录名" label-width="100px" prop="login_name">
@@ -76,16 +57,18 @@
         <el-form-item label="角色名" label-width="100px">
           <el-input v-model="admin_info.role_name" autocomplete="off" :disabled="true"></el-input>
         </el-form-item>
-        <el-form-item class="foot">
-          <el-button type="primary" @click="onSubmit('admin_info')">修改</el-button>
-          <el-button>取消</el-button>
+        <el-form-item class="foot" label-width="100px">
+          <el-button size="small" type="primary" @click="onSubmit('admin_info')">修改</el-button>
+          <el-button size="small">取消</el-button>
         </el-form-item>
       </el-form>
       <div v-else-if="title === '查看'">
-        <el-divider>登录名:{{admin_info.login_name}}</el-divider>
-        <el-divider>密码:{{admin_info.pwd}}</el-divider>
-        <el-divider>姓名:{{admin_info.username}}</el-divider>
-        <el-divider>角色名:{{admin_info.role_name}}</el-divider>
+        <ul class="select_list">
+          <li class="select_list_item"><span>登录名:</span>{{admin_info.login_name}}</li>
+          <li class="select_list_item"><span>密 码:</span>{{admin_info.pwd}}</li>
+          <li class="select_list_item"><span>姓 名:</span>{{admin_info.username}}</li>
+          <li class="select_list_item"><span>角色名:</span>{{admin_info.role_name}}</li>
+        </ul>
       </div>
       <el-form :model="admin_add_info" v-else :rules="rules" ref="admin_add_info">
         <el-form-item label="登录名" label-width="100px" prop="login_name">
@@ -100,9 +83,9 @@
         <el-form-item label="角色名" label-width="100px">
           <el-input v-model="admin_add_info.role_name" autocomplete="off" :disabled="true"></el-input>
         </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="AddSubmit('admin_add_info')">添加</el-button>
-          <el-button>取消</el-button>
+        <el-form-item label-width="100px">
+          <el-button size="small" type="primary" @click="AddSubmit('admin_add_info')">添加</el-button>
+          <el-button size="small">取消</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -275,22 +258,39 @@ export default {
 }
 </script>
 
-<style scoped>
-  .el-input {
-    width: 300px;
+<style lang="scss" scoped>
+$backColor:rgb(242, 242, 242);
+$mainColor: #63b9be;
+.admin_warp {
+  &_top {
+    display: flex;
+    &_input {
+      width: 35%;
+    }
+    // &_btn {
+    //   @include flex;
+    //   width: 8%;
+    //   margin-left: 35px;
+    //   font-size: 13px;
+    // }
   }
-</style>
-
-<style>
-  .admin-warp .el-input__inner {
-    height: 30px;
-  }
-
-  .admin-btn {
-    height: 30px;
-  }
-
-  .content-warp {
+  &_allbtn {
     margin: 20px 0;
   }
+}
+.select_list {
+  padding: 0 20px;
+  &_item {
+    width: 50%;
+    padding: 10px 0;
+    border-bottom:1px solid $backColor;
+    span {
+      width: 15%;
+      display: inline-block;
+    }
+    &:hover {
+      background-color: $backColor;
+    }
+  }
+}
 </style>
