@@ -1,15 +1,15 @@
 <template>
-  <div class="fun-header">
-    <ul class="fun-header-nav">
+  <div class="header_wrap">
+    <ul class="header_wrap_list">
       <router-link to="/" tag="li">首页</router-link>
-      <router-link to="/news" tag="li">会员数据</router-link>
-      <router-link to="/bigdata" tag="li">网站管理</router-link>
-      <router-link to="/intelligence" tag="li">站点管理</router-link>
+      <router-link to="/member" tag="li">会员数据</router-link>
+      <router-link to="/website" tag="li">网站管理</router-link>
+      <router-link to="/site" tag="li">站点管理</router-link>
     </ul>
-    <div class="fun-header-right">
-      <span>用户名:{{admin_info.login_name}}</span>
+    <div class="header_wrap_user">
+      <span>用户名 ：{{admin_info.login_name}}</span>
       |
-      <span>级别:{{admin_info.level===1?'管理员':'成员'}}</span>
+      <span>级别 ：{{admin_info.level===1?'管理员':'成员'}}</span>
       |
       <span class="exit" @click="exit">退出</span>
     </div>
@@ -37,58 +37,32 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .fun-header {
-    width: 98%;
-    height: 100%;
-    margin: auto;
-    left: 0;
-    right: 0;
-    display: flex;
-    position: relative;
+@mixin flex_wrap {
+  display: flex;
+  justify-content: space-between;
+  line-height: 60px;
 
-    &-nav {
-      width: 60%;
-      height: 61px;
-      display: flex;
-      align-items: center;
-      padding-left: 5px;
-      font-size: 16px;
-      font-weight: 600;
-
-      li {
-        margin: 1px 5px;
-        padding: 0 2px;
-        height: 100%;
-        line-height: 68px;
-
-        &:hover {
-          cursor: pointer;
-          border-bottom: 2px solid #3178e2;
-        }
-      }
-    }
-
-    &-right {
-      height: 80px;
-      display: flex;
-      align-items: flex-end;
-      position: absolute;
-      font-size: 14px;
-      font-weight: 400;
-      right: 12%;
-      bottom: 10px;
-
-      span {
-        margin: 0 7px;
-      }
-
-      span:last-child {
-        color: blue;
-
-        &:hover {
-          cursor: pointer;
-        }
-      }
+}
+.header_wrap {
+  font-size: 14px;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 50px 0 20px;
+  height: 60px;
+  background-color: rgb(100, 190, 195);
+  
+  &_list {
+    width: 16%;
+    padding: 0 20px;
+    @include flex_wrap;
+  }
+  &_user {
+    @include flex_wrap;
+    // width: 12%;
+    span {
+      padding: 0 15px;
     }
   }
+}
 </style>

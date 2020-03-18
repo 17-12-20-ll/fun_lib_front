@@ -1,179 +1,167 @@
 <template>
-  <div id="fun-app">
-    <div class="fun-app-header" v-if="isLogin">
-      <Header></Header>
+  <div id="app">
+    <div id="header">
+      <Header />
     </div>
-    <div class="fun-app-main">
-      <div class="fun-app-main-nav" v-if="isLogin">
-        <Nav></Nav>
-      </div>
-      <div class="fun-app-main-content">
-        <router-view></router-view>
-      </div>
-    </div>
+    <router-view></router-view>
   </div>
 </template>
-<script>
-import Header from '@/components/Common/Header'
-import Nav from '@/components/Common/Nav'
 
+<script>
+import Header from "../src/components/Common/Header";
 export default {
   components: {
-    Header,
-    Nav
-  },
-  computed: {
-    isLogin () {
-      return this.$store.getters.isLogin
-    }
-  },
-}
+    Header
+  }
+};
 </script>
-<style lang="scss">
-  html,
-  body,
-  div,
-  span,
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6,
-  p,
-  a,
-  em,
-  img,
-  small,
-  strike,
-  strong,
-  b,
-  u,
-  i,
-  dl,
-  dt,
-  dd,
-  ol,
-  ul,
-  li,
-  fieldset,
-  form,
-  label,
-  legend,
-  table,
-  caption,
-  tbody,
-  tfoot,
-  thead,
-  tr,
-  th,
-  td,
-  article,
-  aside,
-  canvas,
-  figure,
-  figcaption,
-  footer,
-  header,
-  hgroup,
-  main,
-  menu,
-  nav,
-  section,
-  summary,
-  audio,
-  video {
-    margin: 0;
-    padding: 0;
-    border: 0;
-    font-size: 100%;
-    font: inherit;
-    vertical-align: baseline;
-  }
 
-  /* HTML5 display-role reset for older browsers */
-  article,
-  aside,
-  details,
-  figcaption,
-  figure,
-  footer,
-  header,
-  hgroup,
-  main,
-  menu,
-  nav,
-  section {
-    display: block;
-  }
+<style>
+html,
+body,
+div,
+span,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+a,
+em,
+img,
+small,
+strike,
+strong,
+b,
+u,
+i,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+main,
+menu,
+nav,
+section,
+summary,
+audio,
+video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
 
-  input,
-  button {
-    border: none;
-    outline: none;
-  }
+/* HTML5 display-role reset for older browsers */
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+main,
+menu,
+nav,
+section {
+  display: block;
+}
 
-  *[hidden] {
-    display: none;
-  }
+input,
+button {
+  border: none;
+  outline: none;
+}
 
-  ol,
-  ul {
-    list-style: none;
-  }
+*[hidden] {
+  display: none;
+}
 
-  blockquote,
-  q {
-    quotes: none;
-  }
+body {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-size: 12px;
+  line-height: 24px;
+}
 
-  blockquote:before,
-  blockquote:after,
-  q:before,
-  q:after {
-    content: "";
-    content: none;
-  }
+ol,
+ul {
+  list-style: none;
+}
 
-  table {
-    border-collapse: collapse;
-    border-spacing: 0;
-  }
+blockquote,
+q {
+  quotes: none;
+}
 
-  html,
-  body {
-    height: 100%;
-    width: 100%;
-    font-size: 12px;
-  }
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+  content: "";
+  content: none;
+}
 
-  .fun-app {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
 
-    &-header {
-      z-index: 100000;
-      background-color: rgb(255, 255, 255);
-      width: 100%;
-      height: 80px;
-      border-bottom: 1px solid #d3d3d3;
-      box-shadow: 0 0 3px 0 #8d8d8dda;
-    }
+html,
+body {
+  height: 100%;
+  width: 100%;
+  font-size: 12px;
+}
 
-    &-main {
-      flex: 1;
-      display: flex;
+/* 表格区域 */
+.table_content {
+  margin: 20px 0;
+}
 
-      &-nav {
-        height: 100px;
-      }
+/* 头部 wrap */
+.top-wrap {
+  display: flex;
+}
 
-      &-content {
-        width: 100%;
-        height: 80px;
-      }
-    }
-  }
+/* 头部input */
+.head_input {
+  display: flex;
+  justify-content: space-between;
+}
 
+/* 头部按钮 */
+.head_btn {
+  display: flex;
+  justify-content: space-between;
+  width: 8%;
+  margin-left: 35px;
+  font-size: 13px;
+}
 </style>

@@ -1,26 +1,26 @@
 <template>
   <div class="content-warp">
     <div class="top-wrap">
-      <el-input v-model="inputLoginName" placeholder="请输入内容" label="登录名" clearable>
-        <template slot="prepend">登录名：</template>
-      </el-input>
-      <el-input v-model="inputUserName" placeholder="请输入内容" label="姓名" clearable>
-        <template slot="prepend">姓名：</template>
-      </el-input>
-      <el-input v-model="inputGroup" placeholder="请输入内容" label="会员分组" clearable>
-        <el-select v-model="select" slot="prepend" placeholder="请选择">
-          <el-option label="餐厅名" value="1"></el-option>
-          <el-option label="订单号" value="2"></el-option>
-          <el-option label="用户电话" value="3"></el-option>
-        </el-select>
-        <template slot="prepend">会员分组：</template>
-      </el-input>
-      <el-input v-model="inputEmail" placeholder="请输入内容" label="邮箱" clearable>
-        <template slot="prepend">邮箱：</template>
-      </el-input>
-      <el-button type="primary" size="mini" class="admin-btn" @click="query">查询</el-button>
-      <el-button type="success" size="mini" class="admin-btn" @click="handleAdd">添加</el-button>
+      <div class="top-wrap_head head_input">
+        <el-input size="small" v-model="inputLoginName" placeholder="请输入内容" label="登录名" clearable>
+          <template slot="prepend">登录名：</template>
+        </el-input>
+        <el-input size="small" v-model="inputUserName" placeholder="请输入内容" label="姓名" clearable>
+          <template slot="prepend">姓名：</template>
+        </el-input>
+        <el-input size="small" v-model="inputGroup" placeholder="请输入内容" label="会员分组" clearable>
+          <template slot="prepend">会员分组：</template>
+        </el-input>
+        <el-input size="small" v-model="inputEmail" placeholder="请输入内容" label="邮箱" clearable>
+          <template slot="prepend">邮箱：</template>
+        </el-input>
+      </div>
+      <div class="head_btn">
+        <el-button type="primary" size="mini" class="admin-btn" @click="query">查询</el-button>
+        <el-button type="success" size="mini" class="admin-btn" @click="handleAdd">添加</el-button>
+      </div>
     </div>
+    <div class="table_content">
     <el-table
       ref="multipleTable"
       :data="users"
@@ -99,6 +99,7 @@
       </el-table-column>
     </el-table>
     <Pagination :total="user_count" :type="'user'"/>
+    </div>
     <el-dialog :title="title" :visible.sync="dialogFormVisible">
       <div v-if="title === '查看'">
         <el-divider>用户分组:{{user_info.group_name}}</el-divider>
@@ -227,7 +228,7 @@
 </template>
 
 <script>
-import Pagination from '../components/Common/Pagination'
+import Pagination from '@/components/Common/Pagination'
 import qs from 'qs'
 
 export default {
@@ -412,8 +413,10 @@ export default {
 }
 </script>
 
-<style scoped>
-  .el-input {
-    width: 300px;
+<style lang="scss" scoped>
+.top-wrap {
+  &_head {
+    width: 72%;
   }
+}
 </style>

@@ -1,27 +1,14 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '@/views/Home.vue'
+import Home from '@/views/home/Home.vue'
+import Member from '@/views/member/Member.vue'
 import Login from '@/views/Login.vue'
-import SystemConfig from '@/views/SystemConfig.vue'
-import AdminList from '@/views/AdminList.vue'
-import UserList from '@/views/UserList.vue'
-import GroupList from '@/views/GroupList.vue'
-import OneSrcList from '@/views/OneSrcList.vue'
-import TwoSrcList from '@/views/TwoSrcList.vue'
-import ThreeSrcList from '@/views/ThreeSrcList.vue'
-import FourSrcList from '@/views/FourSrcList.vue'
+import Website from '../views/Website/WebsiteIndex.vue'
+import Site from '../views/SiteAdmin/SiteIndex.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
-  {
-    path: '/',
-    name: 'home',
-    component: Home,
-    meta: {
-      title: '首页-管理后台'
-    }
-  },
   {
     path: '/login',
     name: 'login',
@@ -31,69 +18,118 @@ const routes = [
     }
   },
   {
-    path: '/config',
-    name: 'config',
-    component: SystemConfig,
+    path: '/',
+    name: 'home',
+    component: Home,
+    // redirect: '/home/dashboard',
     meta: {
-      title: '系统配置'
-    }
+      title: '首页-崇研科技'
+    },
+    // children: [
+    //   {
+    //     path: '/home/dashboard',
+    //     name: 'dashboard',
+    //     component: () => import('@/views/home/dashboard/Dashboard'),
+    //     meta: {
+    //       title: '数据概览'
+    //     }
+    //   }
+    // ]
+  },
+  // 会员管理
+  {
+    path: '/member',
+    name: 'member',
+    component: Member,
+    redirect: '/member/config',
+    meta: {
+      title: '用户-崇研科技'
+    },
+    children: [
+      {
+        path: '/member/config',
+        name: 'config',
+        component: () => import('@/views/member/admin/SystemConfig'),
+        meta: {
+          title: '系统配置'
+        }
+      },
+      {
+        path: '/member/admins',
+        name: 'admins',
+        component: () => import('@/views/member/admin/AdminList'),
+        meta: {
+          title: '管理员列表'
+        }
+      },
+      {
+        path: '/member/groups',
+        name: 'groups',
+        component: () => import('@/views/member/user/GroupList'),
+        meta: {
+          title: '会员分类列表'
+        }
+      },
+      {
+        path: '/member/users',
+        name: 'users',
+        component: () => import('@/views/member/user/UserList'),
+        meta: {
+          title: '会员列表'
+        }
+      },
+      {
+        path: '/member/one',
+        name: 'one',
+        component: () => import('@/views/member/src/OneSrcList'),
+        meta: {
+          title: '一级资源分类'
+        }
+      },
+      {
+        path: '/member/two',
+        name: 'two',
+        component: () => import('@/views/member/src/TwoSrcList'),
+        meta: {
+          title: '二级资源分类'
+        }
+      },
+      {
+        path: '/member/three',
+        name: 'three',
+        component: () => import('@/views/member/src/ThreeSrcList'),
+        meta: {
+          title: '资源列表入口'
+        }
+      },
+      {
+        path: '/member/four',
+        name: 'four',
+        component: () => import('@/views/member/src/FourSrcList'),
+        meta: {
+          title: '账号信息管理'
+        }
+      },
+      
+    ]
+  },
+  // 网站管理
+  {
+    path: '/website',
+    name: 'website',
+    component: Website,
+    meta: {
+      title: '网站管理'
+    },
   },
   {
-    path: '/admins',
-    name: 'admins',
-    component: AdminList,
+    path: '/site',
+    name: 'site',
+    component: Site,
     meta: {
-      title: '管理员列表'
-    }
-  },
-  {
-    path: '/groups',
-    name: 'groups',
-    component: GroupList,
-    meta: {
-      title: '分组列表'
-    }
-  },
-  {
-    path: '/users',
-    name: 'users',
-    component: UserList,
-    meta: {
-      title: '会员列表'
-    }
-  },
-  {
-    path: '/one',
-    name: 'one',
-    component: OneSrcList,
-    meta: {
-      title: '一级资源分类'
-    }
-  },
-  {
-    path: '/two',
-    name: 'two',
-    component: TwoSrcList,
-    meta: {
-      title: '二级资源分类'
-    }
-  },
-  {
-    path: '/three',
-    name: 'three',
-    component: ThreeSrcList,
-    meta: {
-      title: '资源列表入口'
-    }
-  },
-  {
-    path: '/four',
-    name: 'four',
-    component: FourSrcList,
-    meta: {
-      title: '账号信息管理'
-    }
-  },
+      title: '站点管理'
+    },
+  }
 ]
 
 const router = new VueRouter({

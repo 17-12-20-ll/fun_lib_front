@@ -1,12 +1,15 @@
 <template>
   <div class="content-warp">
     <div class="top-wrap">
-      <el-input v-model="inputGroupName" placeholder="请输入内容" label="组名称" clearable>
+      <el-input size="small" v-model="inputGroupName" placeholder="请输入内容" label="组名称" clearable>
         <template slot="prepend">组名称：</template>
       </el-input>
-      <el-button type="primary" size="mini" class="admin-btn" @click="query">查询</el-button>
-      <el-button type="success" size="mini" class="admin-btn" @click="handleAdd">添加</el-button>
+      <div class="head_btn">
+        <el-button type="primary" size="mini" class="admin-btn" @click="query">查询</el-button>
+        <el-button type="success" size="mini" class="admin-btn" @click="handleAdd">添加</el-button>
+      </div>
     </div>
+    <div class="table_content">
     <el-table
       ref="multipleTable"
       :data="groups"
@@ -46,6 +49,7 @@
         </template>
       </el-table-column>
     </el-table>
+    </div>
     <el-dialog :title="title" :visible.sync="dialogFormVisible">
       <el-form :model="groupInfo" v-if="title === '编辑'" :rules="rules" ref="groupInfo">
         <el-form-item label="组名称" label-width="100px" prop="name">
