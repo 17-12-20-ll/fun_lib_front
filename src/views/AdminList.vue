@@ -271,7 +271,7 @@ export default {
         this.$store.commit('RECEIVE_ADMINS', val)
       }
     }
-  }
+  },
 }
 </script>
 

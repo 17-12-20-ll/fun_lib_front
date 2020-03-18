@@ -77,9 +77,8 @@ export default {
               if (response.code === 200) {
                 this.$message({
                   message: '登录成功.',
-                  customClass: 'hint-message',
+                  type: 'success',
                   center: true,
-                  iconClass: 'layui-icon layui-icon-ok ico-style'
                 })
                 // 登陆成功，接收后端传来的token，并保存到本地localStorage
                 localStorage.setItem('token', response.data.token)

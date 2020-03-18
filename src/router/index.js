@@ -10,6 +10,11 @@ import OneSrcList from '@/views/OneSrcList.vue'
 import TwoSrcList from '@/views/TwoSrcList.vue'
 import ThreeSrcList from '@/views/ThreeSrcList.vue'
 import FourSrcList from '@/views/FourSrcList.vue'
+import TradeTypeList from '@/views/TradeTypeList.vue'
+import CardTradeList from '@/views/CardTradeList.vue'
+import AdminLog from '@/views/AdminLog.vue'
+import FinancialManager from '@/views/FinancialManager.vue'
+import UserOperation from '@/views/UserOperation.vue'
 
 Vue.use(VueRouter)
 
@@ -92,6 +97,46 @@ const routes = [
     component: FourSrcList,
     meta: {
       title: '账号信息管理'
+    }
+  },
+  {
+    path: '/tradetype',
+    name: 'tradetype',
+    component: TradeTypeList,
+    meta: {
+      title: '充值类型列表'
+    }
+  },
+  {
+    path: '/cardtrade',
+    name: 'cardtrade',
+    component: CardTradeList,
+    meta: {
+      title: '卡密充值列表'
+    }
+  },
+  {
+    path: '/adminlog',
+    name: 'adminlog',
+    component: AdminLog,
+    meta: {
+      title: '管理员登陆日志'
+    }
+  },
+  {
+    path: '/financialmanager',
+    name: 'financialmanager',
+    component: FinancialManager,
+    meta: {
+      title: '财务管理'
+    }
+  },
+  {
+    path: '/useroperation',
+    name: 'useroperation',
+    component: UserOperation,
+    meta: {
+      title: '会员行为监控'
     }
   },
 ]

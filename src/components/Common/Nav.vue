@@ -2,7 +2,7 @@
   <div>
     <i class="but" :class="isCollapse?'el-icon-s-unfold':'el-icon-s-fold'" @click="change"></i>
     <el-menu :router="true" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose"
-             :collapse="isCollapse">
+             :collapse="isCollapse" :default-active="this.$route.path">
       <el-menu-item index="/config">
         <i class="el-icon-menu"></i>
         <span slot="title">系统配置</span>
@@ -34,6 +34,26 @@
       <el-menu-item index="/three">
         <i class="el-icon-setting"></i>
         <span slot="title">资源入口列表</span>
+      </el-menu-item>
+      <el-menu-item index="/tradetype">
+        <i class="el-icon-setting"></i>
+        <span slot="title">充值类型列表</span>
+      </el-menu-item>
+      <el-menu-item index="/cardtrade">
+        <i class="el-icon-setting"></i>
+        <span slot="title">卡密充值列表</span>
+      </el-menu-item>
+      <el-menu-item index="/adminlog">
+        <i class="el-icon-setting"></i>
+        <span slot="title">管理员登陆日志</span>
+      </el-menu-item>
+      <el-menu-item index="/financialmanager">
+        <i class="el-icon-setting"></i>
+        <span slot="title">财务管理</span>
+      </el-menu-item>
+      <el-menu-item index="/useroperation">
+        <i class="el-icon-setting"></i>
+        <span slot="title">会员行为监控</span>
       </el-menu-item>
     </el-menu>
   </div>

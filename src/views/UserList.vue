@@ -1,19 +1,15 @@
 <template>
   <div class="content-warp">
     <div class="top-wrap">
+      <el-select v-model="inputGroup" placeholder="选择分组" clearable>
+        <template slot="prepend">类别：</template>
+        <el-option :label="g.name" :value="g.id" v-for="g in groups" :key="g.id"></el-option>
+      </el-select>
       <el-input v-model="inputLoginName" placeholder="请输入内容" label="登录名" clearable>
         <template slot="prepend">登录名：</template>
       </el-input>
       <el-input v-model="inputUserName" placeholder="请输入内容" label="姓名" clearable>
         <template slot="prepend">姓名：</template>
-      </el-input>
-      <el-input v-model="inputGroup" placeholder="请输入内容" label="会员分组" clearable>
-        <el-select v-model="select" slot="prepend" placeholder="请选择">
-          <el-option label="餐厅名" value="1"></el-option>
-          <el-option label="订单号" value="2"></el-option>
-          <el-option label="用户电话" value="3"></el-option>
-        </el-select>
-        <template slot="prepend">会员分组：</template>
       </el-input>
       <el-input v-model="inputEmail" placeholder="请输入内容" label="邮箱" clearable>
         <template slot="prepend">邮箱：</template>
@@ -369,7 +365,7 @@ export default {
       })
     },
     query () {
-      this.$http.getQuery(this.input_login_name, this.input_user_name).then(res => {
+      this.$http.getQueryUser(this.inputGroup, this.inputLoginName, this.inputUserName, this.inputEmail).then(res => {
         if (res.code === 200) {
           this.$message({
             message: '查询成功',
@@ -377,7 +373,7 @@ export default {
             type: 'success',
             customClass: 'hint-message'
           })
-          this.$store.commit('RECEIVE_ADMINS', res.data)
+          this.$store.commit('RECEIVE_USER', res.data)
         }
       }).catch(err => {
         console.log(err, 'err')

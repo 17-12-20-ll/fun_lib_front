@@ -3,6 +3,8 @@ const getters = {
   // 管理员
   admin_info: state => state.admin.admin_info,
   admins: state => state.admin.admins,
+  admin_log: state => state.admin.admin_log,
+  admin_log_count: state => state.admin.admin_log_count,
   // 资源
   one_src: state => state.src.one_src,
   two_src: state => state.src.two_src,
@@ -16,7 +18,11 @@ const getters = {
   groups: state => state.group.groups,
   // 用户
   users: state => state.user.users,
-  user_count: state => state.user.user_count
+  user_count: state => state.user.user_count,
+  // 交易类型
+  trade_types: state => state.trade.trade_types,
+  trade_cards: state => state.trade.trade_cards,
+  trade_card_count: state => state.trade.trade_card_count,
 }
 
 export default getters

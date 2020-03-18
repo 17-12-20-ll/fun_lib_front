@@ -37,6 +37,11 @@
         show-overflow-tooltip>
       </el-table-column>
       <el-table-column
+        prop="url"
+        label="链接"
+        show-overflow-tooltip>
+      </el-table-column>
+      <el-table-column
         prop="username"
         label="账号"
         show-overflow-tooltip>
@@ -140,6 +145,7 @@ export default {
       four_info: {
         name: '',
         code: '',
+        url: '',
         desc: '',
         username: '',
         pwd: '',
