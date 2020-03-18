@@ -21,20 +21,20 @@ const routes = [
     path: '/',
     name: 'home',
     component: Home,
-    // redirect: '/home/dashboard',
+    redirect: '/home/dashboard',
     meta: {
       title: '首页-崇研科技'
     },
-    // children: [
-    //   {
-    //     path: '/home/dashboard',
-    //     name: 'dashboard',
-    //     component: () => import('@/views/home/dashboard/Dashboard'),
-    //     meta: {
-    //       title: '数据概览'
-    //     }
-    //   }
-    // ]
+    children: [
+      {
+        path: '/home/dashboard',
+        name: 'dashboard',
+        component: () => import('@/views/home/dashboard/Dashboard'),
+        meta: {
+          title: '数据概览'
+        }
+      }
+    ]
   },
   // 会员管理
   {

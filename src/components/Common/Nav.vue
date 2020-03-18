@@ -44,8 +44,13 @@
 export default {
   data () {
     return {
-      isCollapse: false
+      isCollapse: false,
+      routerData: []
     }
+  },
+  mounted() {
+
+    console.log(this.$route, this.$router.options.routes[1], 'route')
   },
   methods: {
     handleOpen (key, keyPath) {
