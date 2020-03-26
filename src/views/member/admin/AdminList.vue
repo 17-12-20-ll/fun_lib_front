@@ -22,18 +22,18 @@
         style="width: 100%"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column prop="key" label="序号" width="160">
+        <el-table-column type="selection" width="60"></el-table-column>
+        <el-table-column prop="key" label="序号" width="100">
           <!--        <template slot-scope="scope">{{ scope.row.date }}</template>-->
         </el-table-column>
-        <el-table-column prop="login_name" label="登录名" width="200"></el-table-column>
+        <el-table-column prop="login_name" label="登录名"></el-table-column>
         <el-table-column prop="username" label="姓名" show-overflow-tooltip></el-table-column>
         <el-table-column prop="role_name" label="角色" show-overflow-tooltip></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button size="mini" type="primary" plain @click="handleView(scope.$index, scope.row)">查看</el-button>
             <el-button size="mini" type="success" plain @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-            <el-button size="mini" type="danger" plain @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            <el-button size="mini" type="danger" plain @click="handleDelete(scope.$index, scope.row, admins)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -44,7 +44,7 @@
     </div>
     <!-- 模态 -->
     <el-dialog :title="title" :visible.sync="dialogFormVisible">
-      <el-form :model="admin_info" v-if="title === '编辑'" :rules="rules" ref="admin_info">
+      <el-form size="small" :model="admin_info" v-if="title === '编辑'" :rules="rules" ref="admin_info">
         <el-form-item label="登录名" label-width="100px" prop="login_name">
           <el-input v-model="admin_info.login_name" autocomplete="off"></el-input>
         </el-form-item>
@@ -70,7 +70,7 @@
           <li class="select_list_item"><span>角色名:</span>{{admin_info.role_name}}</li>
         </ul>
       </div>
-      <el-form :model="admin_add_info" v-else :rules="rules" ref="admin_add_info">
+      <el-form size="small" :model="admin_add_info" v-else :rules="rules" ref="admin_add_info">
         <el-form-item label="登录名" label-width="100px" prop="login_name">
           <el-input v-model="admin_add_info.login_name" autocomplete="off"></el-input>
         </el-form-item>
@@ -170,8 +170,15 @@ export default {
       this.title = '添加管理员'
       this.dialogFormVisible = true
     },
-    handleDelete (index, row) {
-      console.log(index, row)
+    handleDelete (index, row, rows) {
+      console.log(row.id, rows,'id')
+      let obj = {
+        index: index,
+        data: rows,
+        id: row.id,
+        t: 'admin'
+      }
+      this.$emit('fun', obj)
     },
     onSubmit (formName) {
       this.$refs[formName].validate((valid) => {
@@ -257,45 +264,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  $backColor: rgb(242, 242, 242);
-  $mainColor: #63b9be;
-  .admin_warp {
-    &_top {
-      display: flex;
-
-      &_input {
-        width: 35%;
-      }
-
-      // &_btn {
-      //   @include flex;
-      //   width: 8%;
-      //   margin-left: 35px;
-      //   font-size: 13px;
-      // }
-    }
-
-    &_allbtn {
-      margin: 20px 0;
+$backColor:rgb(242, 242, 242);
+$mainColor: #63b9be;
+.admin_warp {
+  &_top {
+    display: flex;
+    &_input {
+      width: 38%;
     }
   }
-
-  .select_list {
-    padding: 0 20px;
-
-    &_item {
-      width: 50%;
-      padding: 10px 0;
-      border-bottom: 1px solid $backColor;
-
-      span {
-        width: 15%;
-        display: inline-block;
-      }
-
-      &:hover {
-        background-color: $backColor;
-      }
-    }
+  &_allbtn {
+    margin: 20px 0;
   }
+}
 </style>

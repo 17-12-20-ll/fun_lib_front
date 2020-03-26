@@ -17,6 +17,9 @@ export default {
   components: {
     Appmain,
     Nav
+  },
+  methods: {
+    
   }
 }
 </script>
@@ -33,12 +36,15 @@ export default {
     background-color: rgb(63,63,63);
   }
   &-app-main {
-    flex: 1;
+    flex: 1; 
   }
 }
 </style>
 <style scoped>
-.member >>> .el-input {
+.member >>> .el-form {
+  width: 420px;
+}
+.member >>> .el-input-group {
   width: 300px;
 }
 .member >>> .el-input-group__prepend {
@@ -46,6 +52,9 @@ export default {
 }
 .member >>> .el-table th {
   background-color: rgb(242,242,242);
+}
+.member >>> .el-table th, .el-table td {
+  padding: 15px 0;
 }
 .member >>> .el-button--mini {
   padding: 7px 18px;
@@ -55,4 +64,5 @@ export default {
   padding: 10px 18px;
   font-size: 13px;
 }
+
 </style>

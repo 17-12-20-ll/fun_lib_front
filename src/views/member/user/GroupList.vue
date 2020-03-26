@@ -18,13 +18,12 @@
         @selection-change="handleSelectionChange">
         <el-table-column
           type="selection"
-          width="55">
+          width="60">
         </el-table-column>
         <el-table-column
           prop="key"
           label="序号"
-          width="300">
-          <!--        <template slot-scope="scope">{{ scope.row.date }}</template>-->
+          width="100">
         </el-table-column>
         <el-table-column
           prop="name"
@@ -34,51 +33,58 @@
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button
+              plain
               size="mini"
+              type="primary"
               @click="handleView(scope.$index, scope.row)">查看
-            </el-button>
-            <el-button
-              size="mini"
-              @click="handleEdit(scope.$index, scope.row)">编辑
             </el-button>
             <el-button
               size="mini"
               @click="viewOneSrc(scope.row)">查看所有资源
             </el-button>
             <el-button
+              plain
+              size="mini"
+              type="success"
+              @click="handleEdit(scope.$index, scope.row)">编辑
+            </el-button>
+            <el-button
+              plain
               size="mini"
               type="danger"
-              @click="handleDelete(scope.$index, scope.row)">删除
+              @click="handleDelete(scope.$index, scope.row, groups)">删除
             </el-button>
           </template>
         </el-table-column>
       </el-table>
     </div>
     <el-dialog :title="title" :visible.sync="dialogFormVisible">
-      <el-form :model="groupInfo" v-if="title === '编辑'" :rules="rules" ref="groupInfo">
+      <el-form size="small" :model="groupInfo" v-if="title === '编辑'" :rules="rules" ref="groupInfo">
         <el-form-item label="组名称" label-width="100px" prop="name">
           <el-input v-model="groupInfo.name" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="描述" label-width="100px" prop="desc">
           <el-input v-model="groupInfo.desc" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item>
+        <el-form-item label-width="100px">
           <el-button type="primary" @click="putSubmit('groupInfo')">修改</el-button>
           <el-button>重置</el-button>
         </el-form-item>
       </el-form>
       <div v-else-if="title === '查看'">
-        <el-divider>组名称:{{groupInfo.name}}</el-divider>
-        <el-divider>描述: {{groupInfo.desc}}</el-divider>
+        <ul class="select_list">
+          <li class="select_list_item"><span>组名称:</span>{{groupInfo.name}}</li>
+          <li class="select_list_item"><span>描述:</span>{{groupInfo.desc}}</li>
+        </ul>
       </div>
-      <el-form :model="groupAddInfo" v-else :rules="rules" ref="groupAddInfo">
+      <el-form size="small" :model="groupAddInfo" v-else :rules="rules" ref="groupAddInfo">
         <el-form-item label="组名称" label-width="100px" prop="login_name">
           <el-input v-model="groupAddInfo.name" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="描述" label-width="100px" prop="pwd">
           <el-input v-model="groupAddInfo.desc" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item>
+        <el-form-item label-width="100px">
           <el-button type="primary" @click="AddSubmit('groupAddInfo')">添加</el-button>
           <el-button>重置</el-button>
         </el-form-item>
@@ -214,6 +220,16 @@ export default {
       }).catch(err => {
         console.log(err, 'err')
       })
+    },
+    handleDelete (index, row, rows) {
+      console.log('删除')
+      let obj = {
+        index: index,
+        data: rows,
+        id: row.id,
+        t: 'group'
+      }
+      this.$emit('fun', obj)
     },
     putSubmit (formName) {
       this.$refs[formName].validate((valid) => {

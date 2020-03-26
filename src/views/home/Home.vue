@@ -4,7 +4,7 @@
       <Nav />
     </div>
     <div class="home-app-main">
-      <Appmain/>
+      <Appmain />
     </div>
   </div>
 </template>

@@ -143,3 +143,6 @@ export const postAddTradeType = (data) => ajax.post(`/api/trade/add_trade_type/`
 // ==================== 卡密数据展示
 export const getCardTradeData = (p, n = 10) => ajax.get(`/api/trade/get_card_page_data/?p=${p}&n=${n}`)
 export const getCardTradeCount = () => ajax.get(`/api/trade/get_card_page_count/`)
+
+// ==================== 全局删除
+export const getDaleteItem = (t, id) => ajax.get(`/api/src/del_data/?t=${t}&id=${id}`)

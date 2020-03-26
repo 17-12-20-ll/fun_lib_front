@@ -9,6 +9,7 @@
         </div>
         <div class="login_wrap_main_form">
           <el-form
+            size="small"
             class="login_form"
             label-position="left"
             label-width="auto"

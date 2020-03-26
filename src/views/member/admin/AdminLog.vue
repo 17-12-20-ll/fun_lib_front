@@ -8,12 +8,12 @@
       @selection-change="handleSelectionChange">
       <el-table-column
         type="selection"
-        width="55">
+        width="60">
       </el-table-column>
       <el-table-column
         prop="key"
         label="序号"
-        width="120">
+        width="100">
       </el-table-column>
       <el-table-column
         prop="name"

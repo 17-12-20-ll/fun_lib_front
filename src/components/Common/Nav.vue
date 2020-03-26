@@ -4,11 +4,11 @@
     <el-menu :router="true" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose"
             :collapse="isCollapse"
             :default-active="this.$route.path">
-      <el-menu-item index="/member/config">
-        <i class="el-icon-menu"></i>
-        <span slot="title">系统配置</span>
+      <el-menu-item v-for="i in routerData" :key="i.name" :index="i.path">
+        <i :class="i.meta.iconClass"></i>
+        <span slot="title">{{i.meta.title}}</span>
       </el-menu-item>
-      <el-menu-item index="/member/admins">
+      <!-- <el-menu-item index="/member/admins">
         <i class="el-icon-menu"></i>
         <span slot="title">管理员列表</span>
       </el-menu-item>
@@ -55,7 +55,7 @@
       <el-menu-item index="/member/useroperation">
         <i class="el-icon-setting"></i>
         <span slot="title">会员行为监控</span>
-      </el-menu-item>
+      </el-menu-item> -->
     </el-menu>
   </div>
 </template>
@@ -64,7 +64,16 @@
 export default {
   data () {
     return {
-      isCollapse: false
+      isCollapse: false,
+      routerData: []
+    }
+  },
+  mounted() {
+    let route = this.$route.matched[0].path
+    if(route === '') {
+      this.routerData = this.$router.options.routes[1].children
+    } else if (route === '/member') {
+      this.routerData = this.$router.options.routes[2].children
     }
   },
   methods: {
@@ -98,6 +107,7 @@ export default {
     color: #fff;
   }
   .nav_wrap >>> .el-menu-item i {
+    padding-right: 10px;
     color: rgba(255,255,255,.8);
   }
   .nav_wrap >>> .el-menu-item:hover {

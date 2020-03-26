@@ -8,12 +8,12 @@
       @selection-change="handleSelectionChange">
       <el-table-column
         type="selection"
-        width="55">
+        width="60">
       </el-table-column>
       <el-table-column
         prop="key"
         label="序号"
-        width="120">
+        width="100">
       </el-table-column>
       <el-table-column
         prop="trade_type"
@@ -36,7 +36,7 @@
       <el-table-column
         prop="card_pwd"
         label="卡密"
-        width="120"
+        width="180"
         show-overflow-tooltip>
       </el-table-column>
       <el-table-column
@@ -45,7 +45,7 @@
         show-overflow-tooltip>
         <template slot-scope="scope"> {{scope.row.is_use?'否':'是'}}</template>
       </el-table-column>
-      <el-table-column label="操作" width="300">
+      <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -57,7 +57,7 @@
             size="mini"
             type="danger"
             plain
-            @click="handleDelete(scope.$index, scope.row)">删除
+            @click="handleDelete(scope.$index, scope.row, trade_cards)">删除
           </el-button>
         </template>
       </el-table-column>
@@ -108,8 +108,15 @@ export default {
       this.trade_type_info.days = ''
       this.dialogFormVisible = true
     },
-    handleDelete (index, row) {
-      console.log(index, row)
+    handleDelete (index, row, rows) {
+      console.log('删除')
+      let obj = {
+        index: index,
+        data: rows,
+        id: row.id,
+        t: 'card'
+      }
+      this.$emit('fun', obj)
     },
     onSubmit (formName) {
       this.$refs[formName].validate((valid) => {
