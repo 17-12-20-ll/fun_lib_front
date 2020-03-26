@@ -164,4 +164,21 @@ body {
   margin-left: 35px;
   font-size: 13px;
 }
+
+/* 查看统一样式 */
+.select_list {
+  padding: 0 20px;
+}
+.select_list_item {
+  width: 50%;
+  padding: 10px 0;
+  border-bottom:1px solid rgb(242, 242, 242);
+}
+.select_list_item:hover {
+  background-color: rgb(242, 242, 242);
+}
+.select_list_item span {
+  display: inline-block;
+  margin-right: 20px;
+}
 </style>

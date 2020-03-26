@@ -24,8 +24,8 @@
         @selection-change="handleSelectionChange"
         stripe
       >
-        <el-table-column type="selection" width="55px"></el-table-column>
-        <el-table-column prop="key" label="序号" width="200"></el-table-column>
+        <el-table-column type="selection" width="60"></el-table-column>
+        <el-table-column prop="key" label="序号" width="100"></el-table-column>
         <el-table-column prop="one_name" label="一级资源" width="300"></el-table-column>
         <el-table-column prop="two_name" label="资源名" align="center"></el-table-column>
         <el-table-column prop="pos" label="排序" width="300"></el-table-column>
@@ -47,7 +47,7 @@
               size="mini"
               type="danger"
               plain
-              @click="handleDelete(scope.$index, scope.row)"
+              @click="handleDelete(scope.$index, scope.row, two_src)"
             >删除</el-button>
             <el-button
               size="mini"
@@ -63,21 +63,23 @@
     <el-dialog
       :title="title"
       :visible.sync="dialogFormVisible"
-      width="30%"
       :destroy-on-close="true"
     >
       <div v-if="title === '查看'">
-        <el-divider>资源名称:{{two_src_info.name}}</el-divider>
-        <el-divider>资源链接:{{two_src_info.title_url}}</el-divider>
-        <el-divider>资源描述:{{two_src_info.content}}</el-divider>
-        <el-divider>
-          排序序号:
+        <ul class="select_list">
+          <li class="select_list_item"><span>资源名称:</span>{{two_src_info.name}}</li>
+          <li class="select_list_item"><span>资源链接:</span>{{two_src_info.title_url}}</li>
+          <li class="select_list_item"><span>资源描述:</span>{{two_src_info.content}}</li>
+        </ul>
+        <li class="select_list_item"><span>
+          排序序号:</span>
           <font color="red">{{two_src_info.pos}}</font>
-        </el-divider>
-        <el-divider>资源类型:{{two_src_info.src_type}}</el-divider>
-        <el-divider>所属一级分类:{{two_src_info.one_src}}</el-divider>
+        </li>
+        <li class="select_list_item"><span>资源类型:</span>{{two_src_info.src_type}}</li>
+        <li class="select_list_item"><span>所属一级分类:</span>{{two_src_info.one_src}}</li>
       </div>
       <el-form
+        size="small"
         :model="two_src_info"
         v-else-if="title === '编辑'"
         :rules="rules"
@@ -106,12 +108,13 @@
             <el-option :label="o.name" :value="o.id" v-for="o in  one_src" :key="o.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item class="foot">
+        <el-form-item label-width="100px">
           <el-button type="primary" @click="onSubmit('two_src_info')">修改</el-button>
           <el-button>取消</el-button>
         </el-form-item>
       </el-form>
       <el-form
+        size="small"
         :model="two_src_add_info"
         v-else-if="title==='添加资源'"
         :rules="rules"
@@ -130,21 +133,21 @@
           <el-select v-model="two_src_add_info.src_type" placeholder="请选择资源类型">
             <el-option :label="s.name" :value="s.id" v-for="s in src_types" :key="s.id"></el-option>
           </el-select>
-        </el-form-item>
+        </el-form-item label-width="100px">
         <el-form-item label="所属分类" label-width="100px">
           <el-select v-model="two_src_add_info.one_src" placeholder="请选择一级分类">
             <el-option :label="o.name" :value="o.id" v-for="o in one_src" :key="o.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="资源描述" prop="username">
+        <el-form-item label="资源描述" label-width="100px" prop="username">
           <el-input type="textarea" v-model="two_src_add_info.content" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item>
+        <el-form-item label-width="100px">
           <el-button type="primary" @click="AddSubmit('two_src_add_info')">添加</el-button>
           <el-button>取消</el-button>
         </el-form-item>
       </el-form>
-      <el-form :model="three_info" v-else ref="three_info">
+      <el-form size="small" :model="three_info" v-else ref="three_info">
         <el-form-item label="入口名" label-width="100px" prop="name">
           <el-input v-model="three_info.name" autocomplete="off"></el-input>
         </el-form-item>
@@ -159,10 +162,10 @@
             <el-option :label="s.name" :value="s.id" v-for="s in all_four_src" :key="s.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="入口描述" prop="desc">
+        <el-form-item label="入口描述" label-width="100px" prop="desc">
           <el-input type="textarea" v-model="three_info.desc" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item>
+        <el-form-item label-width="100px">
           <el-button type="primary" @click="AddEntranceSubmit('three_info')">添加</el-button>
           <el-button>取消</el-button>
         </el-form-item>
@@ -274,8 +277,15 @@ export default {
       this.title = "编辑";
       this.dialogFormVisible = true;
     },
-    handleDelete(index, row) {
-      console.log("删除");
+    handleDelete(index, row, rows) {
+      console.log("删除")
+      let obj = {
+        index: index,
+        data: rows,
+        id: row.id,
+        t: 'two_src'
+      }
+      this.$emit('fun', obj)
     },
     //添加入口资源
     async handleAddEntrance(index, row) {
@@ -422,7 +432,7 @@ export default {
 <style lang="scss" scoped>
 .top-wrap {
   &_head {
-    width: 35%;
+    width: 33%;
   }
 }
 </style>

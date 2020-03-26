@@ -5,6 +5,7 @@ import admin from './modules/admin'
 import src from './modules/src'
 import group from './modules/group'
 import user from './modules/user'
+import trade from './modules/trade'
 
 Vue.use(Vuex)
 
@@ -13,7 +14,8 @@ export default new Vuex.Store({
     admin,
     src,
     group,
-    user
+    user,
+    trade
   },
   getters
 })

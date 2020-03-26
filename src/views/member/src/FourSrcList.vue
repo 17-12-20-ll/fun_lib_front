@@ -22,14 +22,15 @@
         style="width: 100%"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column prop="key" label="序号" width="120">
+        <el-table-column type="selection" width="60"></el-table-column>
+        <el-table-column prop="key" label="序号" width="100">
           <!--        <template slot-scope="scope">{{ scope.row.date }}</template>-->
         </el-table-column>
         <el-table-column prop="name" label="链接名字" width="120"></el-table-column>
-        <el-table-column prop="code" label="编码" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="username" label="账号" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="pwd" label="密码" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="code" label="编码" width="120" ></el-table-column>
+        <el-table-column prop="url" label="链接" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="username" label="账号" width="180" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="pwd" label="密码" width="180" show-overflow-tooltip></el-table-column>
         <el-table-column prop="add_time" label="添加时间" show-overflow-tooltip></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
@@ -38,35 +39,40 @@
               type="primary"
               plain
               @click="handleView(scope.$index, scope.row)"
-            >查看</el-button>
+            >查看
+            </el-button>
             <el-button
               size="mini"
               type="success"
               plain
               @click="handleEdit(scope.$index, scope.row)"
-            >编辑</el-button>
+            >编辑
+            </el-button>
             <el-button
               size="mini"
               type="danger"
               plain
-              @click="handleDelete(scope.$index, scope.row)"
-            >删除</el-button>
+              @click="handleDelete(scope.$index, scope.row, fours)"
+            >删除
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
-      <Pagination :total="four_src_count" :type="'four_src'" />
+      <Pagination :total="four_src_count" :type="'four_src'"/>
     </div>
 
     <el-dialog :title="title" :visible.sync="dialogFormVisible">
       <div v-if="title === '查看'">
-        <el-divider>链接地址:{{four_info.name}}</el-divider>
-        <el-divider>编码:{{four_info.code}}</el-divider>
-        <el-divider>详情:{{four_info.desc}}</el-divider>
-        <el-divider>账号:{{four_info.username}}</el-divider>
-        <el-divider>密码:{{four_info.pwd}}</el-divider>
-        <el-divider>添加时间:{{four_info.add_time}}</el-divider>
+        <ul class="select_list">
+          <li class="select_list_item"><span>链接地址:</span>{{four_info.name}}</li>
+          <li class="select_list_item"><span>编码:</span>{{four_info.code}}</li>
+          <li class="select_list_item"><span>详情:</span>{{four_info.desc}}</li>
+          <li class="select_list_item"><span>账号:</span>{{four_info.username}}</li>
+          <li class="select_list_item"><span>密码:</span>{{four_info.pwd}}</li>
+          <li class="select_list_item"><span>添加时间:</span>{{four_info.add_time}}</li>
+        </ul>
       </div>
-      <el-form :model="four_add_info" v-else-if="title === '添加'" ref="four_add_info">
+      <el-form size="small" :model="four_add_info" v-else-if="title === '添加'" ref="four_add_info">
         <el-form-item label="账号链接" label-width="100px" prop="name">
           <el-input v-model="four_add_info.name" autocomplete="off"></el-input>
         </el-form-item>
@@ -79,15 +85,15 @@
         <el-form-item label="密码" label-width="100px">
           <el-input v-model.number="four_add_info.pwd" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="账号描述" prop="desc">
+        <el-form-item label="账号描述" label-width="100px" prop="desc">
           <el-input type="textarea" v-model="four_add_info.desc" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item>
+        <el-form-item label-width="100px">
           <el-button type="primary" @click="AddSubmit('four_add_info')">添加</el-button>
           <el-button>取消</el-button>
         </el-form-item>
       </el-form>
-      <el-form :model="four_info" v-else-if="title === '编辑'" ref="four_info">
+      <el-form size="small" :model="four_info" v-else-if="title === '编辑'" ref="four_info">
         <el-form-item label="账号链接" label-width="100px" prop="name">
           <el-input v-model="four_info.name" autocomplete="off"></el-input>
         </el-form-item>
@@ -100,11 +106,11 @@
         <el-form-item label="密码" label-width="100px">
           <el-input v-model.number="four_info.pwd" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="账号描述" prop="desc">
+        <el-form-item label="账号描述" label-width="100px" prop="desc">
           <el-input type="textarea" v-model="four_info.desc" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="onSubmit('four_info')">提交</el-button>
+        <el-form-item label-width="100px">
+          <el-button type="primary" @click="onSubmit('four_info')">修改</el-button>
           <el-button>取消</el-button>
         </el-form-item>
       </el-form>
@@ -113,180 +119,173 @@
 </template>
 
 <script>
-import Pagination from "@/components/Common/Pagination";
-import qs from "qs";
+import Pagination from '@/components/Common/Pagination'
+import qs from 'qs'
 
 export default {
-  name: "FourSrcList",
-  data() {
+  name: 'FourSrcList',
+  data () {
     return {
-      inputName: "",
-      inputCode: "",
+      inputName: '',
+      inputCode: '',
       dialogFormVisible: false,
-      title: "",
+      title: '',
       four_info: {
-        name: "",
-        code: "",
-        desc: "",
-        username: "",
-        pwd: "",
-        add_time: ""
+        name: '',
+        code: '',
+        url: '',
+        desc: '',
+        username: '',
+        pwd: '',
+        add_time: ''
       },
       four_add_info: {
-        name: "",
-        code: "",
-        desc: "",
-        username: "",
-        pwd: ""
+        name: '',
+        code: '',
+        desc: '',
+        username: '',
+        pwd: '',
       },
-      id: "",
+      id: '',
       multipleSelection: []
-    };
+    }
   },
   components: {
     Pagination
   },
-  mounted() {
-    this.update();
+  mounted () {
+    this.update()
   },
   methods: {
-    async handleView(index, row) {
-      this.title = "查看";
-      this.dialogFormVisible = true;
+    async handleView (index, row) {
+      this.title = '查看'
+      this.dialogFormVisible = true
       // 发送请求获取详情数据
-      await this.$http
-        .getFourSrcInfo(row.id)
-        .then(res => {
-          this.four_info = res.data;
-        })
-        .catch(err => {
-          console.log(err, "err");
-        });
+      await this.$http.getFourSrcInfo(row.id).then(res => {
+        this.four_info = res.data
+      }).catch(err => {
+        console.log(err, 'err')
+      })
     },
-    handleSelectionChange(val) {
-      this.multipleSelection = val;
+    handleSelectionChange (val) {
+      this.multipleSelection = val
     },
-    handleAdd() {
-      this.title = "添加";
-      this.dialogFormVisible = true;
+    handleAdd () {
+      this.title = '添加'
+      this.dialogFormVisible = true
     },
-    async handleEdit(index, row) {
-      this.id = row.id;
-      await this.$http
-        .getFourSrcInfo(row.id)
-        .then(res => {
-          this.four_info = res.data;
-        })
-        .catch(err => {
-          console.log(err, "err");
-        });
-      this.title = "编辑";
-      this.dialogFormVisible = true;
+    async handleEdit (index, row) {
+      this.id = row.id
+      await this.$http.getFourSrcInfo(row.id).then(res => {
+        this.four_info = res.data
+      }).catch(err => {
+        console.log(err, 'err')
+      })
+      this.title = '编辑'
+      this.dialogFormVisible = true
     },
-    handleDelete(index, row) {
-      console.log("删除");
+    handleDelete (index, row, rows) {
+      console.log('删除')
+      let obj = {
+        index: index,
+        data: rows,
+        id: row.id,
+        t: 'four_src'
+      }
+      this.$emit('fun', obj)
     },
-    onSubmit(formName) {
-      this.$refs[formName].validate(valid => {
+    onSubmit (formName) {
+      this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.four_info.id = this.id;
-          this.$http
-            .postUpdateFourSrc(qs.stringify(this.four_info))
-            .then(res => {
-              if (res.code === 200) {
-                this.$store.commit("UPDATE_FOUR_SRC", res.data);
-                this.dialogFormVisible = false;
-                this.$message({
-                  message: "更新成功",
-                  center: true,
-                  type: "success",
-                  customClass: "hint-message"
-                });
-              } else {
-                this.$message({
-                  message: res.msg,
-                  center: true,
-                  type: "error",
-                  customClass: "hint-message"
-                });
-              }
-            })
-            .catch(err => {
-              console.log(err, "err");
-            });
+          this.four_info.id = this.id
+          this.$http.postUpdateFourSrc(qs.stringify(this.four_info)).then(res => {
+            if (res.code === 200) {
+              this.$store.commit('UPDATE_FOUR_SRC', res.data)
+              this.dialogFormVisible = false
+              this.$message({
+                message: '更新成功',
+                center: true,
+                type: 'success',
+                customClass: 'hint-message'
+              })
+            } else {
+              this.$message({
+                message: res.msg,
+                center: true,
+                type: 'error',
+                customClass: 'hint-message'
+              })
+            }
+          }).catch(err => {
+            console.log(err, 'err')
+          })
         } else {
-          console.log("error submit!!");
-          return false;
+          console.log('error submit!!')
+          return false
         }
-      });
+      })
     },
-    AddSubmit(formName) {
-      this.$refs[formName].validate(valid => {
+    AddSubmit (formName) {
+      this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.$http
-            .postAddFourSrc(qs.stringify(this.four_add_info))
-            .then(res => {
-              if (res.code === 200) {
-                this.update();
-                this.dialogFormVisible = false;
-                this.$message({
-                  message: "添加成功",
-                  center: true,
-                  type: "success",
-                  customClass: "hint-message"
-                });
-              }
-            })
-            .catch(err => {
-              console.log(err, "err");
-            });
+          this.$http.postAddFourSrc(qs.stringify(this.four_add_info)).then(res => {
+            if (res.code === 200) {
+              this.update()
+              this.dialogFormVisible = false
+              this.$message({
+                message: '添加成功',
+                center: true,
+                type: 'success',
+                customClass: 'hint-message'
+              })
+            }
+          }).catch(err => {
+            console.log(err, 'err')
+          })
         }
-      });
+      })
     },
-    update() {
-      this.$store.dispatch("action_get_four_src", 1);
-      this.$store.dispatch("action_get_four_src_count");
+    update () {
+      this.$store.dispatch('action_get_four_src', 1)
+      this.$store.dispatch('action_get_four_src_count')
     },
-    query() {
+    query () {
       // 查询
-      this.$http
-        .queryFourSrc(this.inputName, this.inputCode)
-        .then(res => {
-          if (res.code === 200) {
-            this.$message({
-              message: "查询成功",
-              center: true,
-              type: "success",
-              customClass: "hint-message"
-            });
-            this.$store.commit("RECEIVE_FOUR_SRC", res.data);
-          }
-        })
-        .catch(err => {
-          console.log(err, "err");
-        });
-      this.inputName = "";
-      this.inputCode = "";
-    }
+      this.$http.queryFourSrc(this.inputName, this.inputCode).then(res => {
+        if (res.code === 200) {
+          this.$message({
+            message: '查询成功',
+            center: true,
+            type: 'success',
+            customClass: 'hint-message'
+          })
+          this.$store.commit('RECEIVE_FOUR_SRC', res.data)
+        }
+      }).catch(err => {
+        console.log(err, 'err')
+      })
+      this.inputName = ''
+      this.inputCode = ''
+    },
   },
   computed: {
-    fours() {
+    fours () {
       return this.$store.getters.four_src.map((item, index) => {
-        item["key"] = index + 1;
-        return item;
-      });
+        item['key'] = index + 1
+        return item
+      })
     },
-    four_src_count() {
-      return this.$store.getters.four_src_count;
+    four_src_count () {
+      return this.$store.getters.four_src_count
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>
-.top-wrap {
-  &_head {
-    width: 35%;
+  .top-wrap {
+    &_head {
+      width: 38%;
+    }
   }
-}
 </style>

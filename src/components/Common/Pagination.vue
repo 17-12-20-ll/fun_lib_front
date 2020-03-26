@@ -24,6 +24,10 @@ export default {
         this.$store.dispatch('action_get_three_src', p)
       } else if (this.type === 'user') {
         this.$store.dispatch('action_get_user', p)
+      } else if (this.type === 'trade_card') {
+        this.$store.dispatch('action_get_trade_cards', p)
+      } else if (this.type === 'admin_log') {
+        this.$store.dispatch('action_get_admin_log', p)
       }
     },
   }

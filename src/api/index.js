@@ -39,6 +39,11 @@ export const postUpdateAdmin = (data) => ajax.post('/api/user/update_admin/', da
 export const postAddAdmin = (data) => ajax.post('/api/user/add_admin/', data)
 // 根据条件查询数据
 export const getQuery = (k1, k2) => ajax.get(`/api/user/query_admin/?login_name=${k1}&user_name=${k2}`)
+// 管理员登陆日志 获取数据
+export const getAdminLoginLogData = (p, n = 10) => ajax.get(`/api/operation/get_admin_log_data/?p=${p}&n=${n}`)
+// 管理员登陆日志总数
+export const getAdminLoginLogCount = () => ajax.get(`/api/operation/get_admin_log_count/`)
+
 // ===================用户====================
 // 获取用户与用户列表
 export const getUsers = (p, n = 10) => ajax.get(`/api/user/get_users/?p=${p}&n=${n}`)
@@ -50,6 +55,8 @@ export const getUserInfo = (id) => ajax.get(`/api/user/get_users/?id=${id}`)
 export const postUpdateUser = (data) => ajax.post(`/api/user/update/`, data)
 // 后台添加用户
 export const postAddUser = (data) => ajax.post(`/api/user/add_back_user/`, data)
+// 条件查询用户
+export const getQueryUser = (group_id, login_name, user_name, email) => ajax.get(`/api/user/query_user/?group_id=${group_id}&login_name=${login_name}&user_name=${user_name}&email=${email}`)
 // ===================会员分组=================
 // 获取会员分组列表
 export const getGroupsApi = (name = null) => ajax.get(name ? `/api/user/get_to_name_info/?name=${name}` : '/api/user/get_to_name_info/')
@@ -113,3 +120,20 @@ export const postAddFourSrc = (data) => ajax.post(`/api/src/add_four_src/`, data
 export const postUpdateFourSrc = (data) => ajax.post(`/api/src/update_four_src/`, data)
 // 查询账号资源
 export const queryFourSrc = (name, code) => ajax.get(`/api/src/query_four_src/?name=${name}&code=${code}`)
+
+// ==================== 交易类型展示
+// 获取所有交易类型
+export const getTradeType = (id = null) => ajax.get(id ? `/api/trade/get_trade_type_info/?id=${id}` : `/api/trade/get_trade_type_info/`)
+// 修改交易类型
+export const postUpdateTradeType = (data) => ajax.post(`/api/trade/update_trade_type/`, data)
+// 查询数据
+export const queryTradeType = (name) => ajax.get(`/api/trade/query_trade_type/?name=${name}`)
+// 添加
+export const postAddTradeType = (data) => ajax.post(`/api/trade/add_trade_type/`, data)
+
+// ==================== 卡密数据展示
+export const getCardTradeData = (p, n = 10) => ajax.get(`/api/trade/get_card_page_data/?p=${p}&n=${n}`)
+export const getCardTradeCount = () => ajax.get(`/api/trade/get_card_page_count/`)
+
+// ==================== 全局删除
+export const getDaleteItem = (t, id) => ajax.get(`/api/src/del_data/?t=${t}&id=${id}`)

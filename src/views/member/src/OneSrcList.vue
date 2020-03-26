@@ -1,5 +1,5 @@
 <template>
-  <div class="content-warp">
+  <div class="content-wrap">
     <div class="top-wrap">
       <el-input size="small" v-model="inputOneSrc" placeholder="请输入内容" label="组名称" clearable>
         <template slot="prepend">分类名称：</template>
@@ -18,13 +18,13 @@
         @selection-change="handleSelectionChange"
         stripe
       >
-        <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column prop="key" label="序号" width="120">
+        <el-table-column type="selection" width="60"></el-table-column>
+        <el-table-column prop="key" label="序号" width="100">
           <!--        <template slot-scope="scope">{{ scope.row.date }}</template>-->
         </el-table-column>
         <el-table-column prop="name" label="资源分类" align="center"></el-table-column>
-        <el-table-column prop="pos" label="排序" width="200"></el-table-column>
-        <el-table-column label="操作" width="300">
+        <el-table-column prop="pos" label="排序"></el-table-column>
+        <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button
               size="mini"
@@ -42,7 +42,7 @@
               size="mini"
               type="danger"
               plain
-              @click="handleDelete(scope.$index, scope.row)"
+              @click="handleDelete(scope.$index, scope.row, one_src)"
             >删除</el-button>
           </template>
         </el-table-column>
@@ -53,22 +53,26 @@
     <el-dialog
       :title="title"
       :visible.sync="dialogFormVisible"
-      width="30%"
       :destroy-on-close="true"
     >
       <div v-if="title === '查看'">
-        <el-divider>资源名称:{{one_src_info.name}}</el-divider>
-        <el-divider>资源描述:{{one_src_info.desc}}</el-divider>
-        <el-divider>
-          排序序号:
-          <font color="red">{{one_src_info.pos}}</font>
-        </el-divider>
-        <div>
-          所属分组：
-          <el-tag type="success" v-for="g in one_src_info.groups" :key="g.id">{{g.name}}</el-tag>
-        </div>
+        <ul class="select_list">
+          <li class="select_list_item"><span>资源名称：</span>{{one_src_info.name}}</li>
+          <li class="select_list_item"><span>资源描述：</span>{{one_src_info.desc}}</li>
+          <li class="select_list_item"><span>
+            排序序号：</span>
+            <font color="red">{{one_src_info.pos}}</font>
+          </li>
+          <li class="select_list_item item_tag"><span>
+            所属分组：</span>
+            <div class="tag">
+              <el-tag size="mini" type="primary" v-for="g in one_src_info.groups" :key="g.id">{{g.name}}</el-tag>
+            </div>
+          </li>
+        </ul>
       </div>
       <el-form
+        size="small"
         :model="one_src_info"
         v-else-if="title === '编辑'"
         :rules="rules"
@@ -84,12 +88,12 @@
         <el-form-item label="排序序号" label-width="100px" prop="pos">
           <el-input v-model="one_src_info.pos" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item>
+        <el-form-item label-width="100px">
           <el-checkbox-group v-model="edit_groups">
             <el-checkbox :label="g.id" v-for="g in user_groups" :key="g.id">{{g.name}}</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
-        <el-form-item class="foot">
+        <el-form-item label-width="100px" class="foot">
           <el-button type="primary" @click="onSubmit('one_src_info')">修改</el-button>
           <el-button>取消</el-button>
         </el-form-item>
@@ -165,8 +169,15 @@ export default {
       this.dialogFormVisible = true;
       this.id = row.id;
     },
-    handleDelete(index, row) {
+    handleDelete(index, row, rows) {
       console.log("删除");
+      let obj = {
+        index: index,
+        data: rows,
+        id: row.id,
+        t: 'one_src'
+      }
+      this.$emit('fun', obj)
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;
@@ -253,19 +264,15 @@ export default {
   }
 };
 </script>
-
 <style scoped>
-.top {
+.item_tag {
   display: flex;
-  line-height: 30px;
+  justify-content: space-between;
 }
-
-.el-input {
-  width: 300px;
+.tag {
+  width: 79%;
 }
-</style>
-<style>
-.foot .el-form-item__content {
-  text-align: center;
+.content-wrap >>> .el-tag--mini {
+  margin: 5px 10px 5px 0;
 }
 </style>

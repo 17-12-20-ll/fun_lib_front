@@ -1,7 +1,11 @@
 <template>
-  <div class="content-warp">
+  <div class="content-wrap">
     <div class="top-wrap">
       <div class="top-wrap_head head_input">
+        <el-select size="small" v-model="inputGroup" placeholder="选择分组" clearable>
+          <template slot="prepend">类别：</template>
+          <el-option :label="g.name" :value="g.id" v-for="g in groups" :key="g.id"></el-option>
+        </el-select>
         <el-input size="small" v-model="inputLoginName" placeholder="请输入内容" label="登录名" clearable>
           <template slot="prepend">登录名：</template>
         </el-input>
@@ -29,12 +33,12 @@
       @selection-change="handleSelectionChange">
       <el-table-column
         type="selection"
-        width="55">
+        width="60">
       </el-table-column>
       <el-table-column
         prop="key"
         label="序号"
-        width="80">
+        width="100">
       </el-table-column>
       <el-table-column
         prop="login_name"
@@ -57,15 +61,17 @@
       <el-table-column
         prop="total"
         label="点数"
-        width="80"
+        width="100"
         show-overflow-tooltip>
       </el-table-column>
       <el-table-column
+        width="180"
         prop="add_time"
         label="注册时间"
         show-overflow-tooltip>
       </el-table-column>
       <el-table-column
+        width="180"
         prop="end_time"
         label="有效期至"
         show-overflow-tooltip>
@@ -73,9 +79,11 @@
       <el-table-column
         prop="last_login_ip"
         label="上次登录ip"
+        width="200"
         show-overflow-tooltip>
       </el-table-column>
       <el-table-column
+        width="200"
         prop="cur_login_ip"
         label="本次登陆ip"
         show-overflow-tooltip>
@@ -83,17 +91,22 @@
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button
+            plain
             size="mini"
+            type="primary"
             @click="handleView(scope.$index, scope.row)">查看
           </el-button>
           <el-button
+            plain
             size="mini"
+            type="success"
             @click="handleEdit(scope.$index, scope.row)">编辑
           </el-button>
           <el-button
+            plain
             size="mini"
             type="danger"
-            @click="handleDelete(scope.$index, scope.row)">删除
+            @click="handleDelete(scope.$index, scope.row, users)">删除
           </el-button>
         </template>
       </el-table-column>
@@ -102,19 +115,21 @@
     </div>
     <el-dialog :title="title" :visible.sync="dialogFormVisible">
       <div v-if="title === '查看'">
-        <el-divider>用户分组:{{user_info.group_name}}</el-divider>
-        <el-divider>登录名:{{user_info.login_name}}</el-divider>
-        <el-divider>密码:{{user_info.pwd}}</el-divider>
-        <el-divider>邮箱:{{user_info.email}}</el-divider>
-        <el-divider>专业:{{user_info.major}}</el-divider>
-        <el-divider>昵称:{{user_info.user_name}}</el-divider>
-        <el-divider>qq:{{user_info.qq}}</el-divider>
-        <el-divider>电话:{{user_info.phone}}</el-divider>
-        <el-divider>结束时间:{{user_info.end_time}}</el-divider>
-        <el-divider>可用线程:{{user_info.enable}}</el-divider>
-        <el-divider>是否激活:{{user_info.active?'是':'否'}}</el-divider>
+        <ul class="select_list">
+          <li class="select_list_item"><span>用户分组:</span>{{user_info.group_name}}</li>
+          <li class="select_list_item"><span>登录名:</span>{{user_info.login_name}}</li>
+          <li class="select_list_item"><span>密码:</span>{{user_info.pwd}}</li>
+          <li class="select_list_item"><span>邮箱:</span>{{user_info.email}}</li>
+          <li class="select_list_item"><span>专业:</span>{{user_info.major}}</li>
+          <li class="select_list_item"><span>昵称:</span>{{user_info.user_name}}</li>
+          <li class="select_list_item"><span>qq:</span>{{user_info.qq}}</li>
+          <li class="select_list_item"><span>电话:</span>{{user_info.phone}}</li>
+          <li class="select_list_item"><span>结束时间:</span>{{user_info.end_time}}</li>
+          <li class="select_list_item"><span>可用线程:</span>{{user_info.enable}}</li>
+          <li class="select_list_item"><span>是否激活:</span>{{user_info.active?'是':'否'}}</li>
+        </ul>
       </div>
-      <el-form :model="user_info" v-else-if="title === '查看'" ref="user_info">
+      <el-form size="small" :model="user_info" v-else-if="title === '查看'" ref="user_info">
         <el-form-item label="分组" label-width="100px" prop="name">
           <el-select v-model="user_info.group_id" placeholder="请选择资源类型">
             <el-option :label="g.name" :value="g.id" v-for="g in groups" :key="g.id"></el-option>
@@ -169,7 +184,7 @@
           <el-button>取消</el-button>
         </el-form-item>
       </el-form>
-      <el-form :model="user_info" v-else-if="title === '添加'" ref="user_info">
+      <el-form size="small" :model="user_info" v-else-if="title === '添加'" ref="user_info">
         <el-form-item label="分组" label-width="100px" prop="name">
           <el-select v-model="user_info.group_id" placeholder="请选择资源类型">
             <el-option :label="g.name" :value="g.id" v-for="g in groups" :key="g.id"></el-option>
@@ -310,8 +325,15 @@ export default {
       this.user_info.active = true
       this.dialogFormVisible = true
     },
-    handleDelete (index, row) {
-      console.log(index, row)
+    handleDelete (index, row, rows) {
+      console.log('删除')
+      let obj = {
+        index: index,
+        data: rows,
+        id: row.id,
+        t: 'user'
+      }
+      this.$emit('fun', obj)
     },
     onSubmit (formName) {
       this.$refs[formName].validate((valid) => {
@@ -370,7 +392,7 @@ export default {
       })
     },
     query () {
-      this.$http.getQuery(this.input_login_name, this.input_user_name).then(res => {
+      this.$http.getQueryUser(this.inputGroup, this.inputLoginName, this.inputUserName, this.inputEmail).then(res => {
         if (res.code === 200) {
           this.$message({
             message: '查询成功',
@@ -378,7 +400,7 @@ export default {
             type: 'success',
             customClass: 'hint-message'
           })
-          this.$store.commit('RECEIVE_ADMINS', res.data)
+          this.$store.commit('RECEIVE_USER', res.data)
         }
       }).catch(err => {
         console.log(err, 'err')
@@ -416,7 +438,15 @@ export default {
 <style lang="scss" scoped>
 .top-wrap {
   &_head {
-    width: 72%;
+    width: 86%;
   }
+}
+</style>
+<style scoped>
+.content-wrap >>> .el-input-group {
+  width: 270px;
+}
+.content-wrap >>> .el-select {
+  width: 240px;
 }
 </style>

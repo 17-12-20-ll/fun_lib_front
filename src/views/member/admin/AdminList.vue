@@ -22,18 +22,18 @@
         style="width: 100%"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column prop="key" label="序号" width="160">
+        <el-table-column type="selection" width="60"></el-table-column>
+        <el-table-column prop="key" label="序号" width="100">
           <!--        <template slot-scope="scope">{{ scope.row.date }}</template>-->
         </el-table-column>
-        <el-table-column prop="login_name" label="登录名" width="200"></el-table-column>
+        <el-table-column prop="login_name" label="登录名"></el-table-column>
         <el-table-column prop="username" label="姓名" show-overflow-tooltip></el-table-column>
         <el-table-column prop="role_name" label="角色" show-overflow-tooltip></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button size="mini" type="primary" plain @click="handleView(scope.$index, scope.row)">查看</el-button>
             <el-button size="mini" type="success" plain @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-            <el-button size="mini" type="danger" plain @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            <el-button size="mini" type="danger" plain @click="handleDelete(scope.$index, scope.row, admins)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -44,7 +44,7 @@
     </div>
     <!-- 模态 -->
     <el-dialog :title="title" :visible.sync="dialogFormVisible">
-      <el-form :model="admin_info" v-if="title === '编辑'" :rules="rules" ref="admin_info">
+      <el-form size="small" :model="admin_info" v-if="title === '编辑'" :rules="rules" ref="admin_info">
         <el-form-item label="登录名" label-width="100px" prop="login_name">
           <el-input v-model="admin_info.login_name" autocomplete="off"></el-input>
         </el-form-item>
@@ -70,7 +70,7 @@
           <li class="select_list_item"><span>角色名:</span>{{admin_info.role_name}}</li>
         </ul>
       </div>
-      <el-form :model="admin_add_info" v-else :rules="rules" ref="admin_add_info">
+      <el-form size="small" :model="admin_add_info" v-else :rules="rules" ref="admin_add_info">
         <el-form-item label="登录名" label-width="100px" prop="login_name">
           <el-input v-model="admin_add_info.login_name" autocomplete="off"></el-input>
         </el-form-item>
@@ -93,183 +93,174 @@
 </template>
 
 <script>
-import qs from "qs";
+import qs from 'qs'
 
 export default {
-  data() {
+  data () {
     return {
       multipleSelection: [],
       dialogFormVisible: false,
       admin_form: {
-        name: "admin"
+        name: 'admin'
       },
-      title: "",
+      title: '',
       admin_info: {
-        login_name: "",
-        pwd: "",
-        username: "",
-        role_name: ""
+        login_name: '',
+        pwd: '',
+        username: '',
+        role_name: ''
       },
       admin_add_info: {
-        login_name: "",
-        pwd: "",
-        username: "",
-        role_name: "管理员"
+        login_name: '',
+        pwd: '',
+        username: '',
+        role_name: '管理员'
       },
       rules: {
         login_name: [
-          { required: true, message: "请输入登录名", trigger: "blur" },
-          { min: 5, max: 18, message: "长度在 5 到 18 个字符", trigger: "blur" }
+          { required: true, message: '请输入登录名', trigger: 'blur' },
+          { min: 5, max: 18, message: '长度在 5 到 18 个字符', trigger: 'blur' }
         ],
         pwd: [
-          { required: true, message: "请输入密码", trigger: "blur" },
-          { min: 6, max: 18, message: "长度在 6 到 18 个字符", trigger: "blur" }
-        ]
+          { required: true, message: '请输入密码', trigger: 'blur' },
+          { min: 6, max: 18, message: '长度在 6 到 18 个字符', trigger: 'blur' }
+        ],
       },
-      input_login_name: "",
-      input_user_name: ""
-    };
+      input_login_name: '',
+      input_user_name: ''
+    }
   },
-  mounted() {
+  mounted () {
     // 获取管理员列表
-    this.$store.dispatch("action_get_admins");
+    this.$store.dispatch('action_get_admins')
   },
   methods: {
-    toggleSelection(rows) {
+    toggleSelection (rows) {
       if (rows) {
         rows.forEach(row => {
-          this.$refs.multipleTable.toggleRowSelection(row);
-        });
+          this.$refs.multipleTable.toggleRowSelection(row)
+        })
       } else {
-        this.$refs.multipleTable.clearSelection();
+        this.$refs.multipleTable.clearSelection()
       }
     },
-    handleSelectionChange(val) {
-      this.multipleSelection = val;
+    handleSelectionChange (val) {
+      this.multipleSelection = val
     },
-    async handleView(index, row) {
-      this.title = "查看";
-      this.dialogFormVisible = true;
+    async handleView (index, row) {
+      this.title = '查看'
+      this.dialogFormVisible = true
       // 发送请求获取详情数据
-      await this.$http
-        .getAdminInfo(row.id)
-        .then(res => {
-          this.admin_info = res.data;
-        })
-        .catch(err => {
-          console.log(err, "err");
-        });
+      await this.$http.getAdminInfo(row.id).then(res => {
+        this.admin_info = res.data
+      }).catch(err => {
+        console.log(err, 'err')
+      })
     },
-    async handleEdit(index, row) {
-      if (!this.admin_info.login_name) {
-        await this.$http
-          .getAdminInfo(row.id)
-          .then(res => {
-            this.admin_info = res.data;
-          })
-          .catch(err => {
-            console.log(err, "err");
-          });
+    async handleEdit (index, row) {
+      await this.$http.getAdminInfo(row.id).then(res => {
+        this.admin_info = res.data
+      }).catch(err => {
+        console.log(err, 'err')
+      })
+      this.title = '编辑'
+      this.dialogFormVisible = true
+    },
+    handleAdd () {
+      this.title = '添加管理员'
+      this.dialogFormVisible = true
+    },
+    handleDelete (index, row, rows) {
+      console.log(row.id, rows,'id')
+      let obj = {
+        index: index,
+        data: rows,
+        id: row.id,
+        t: 'admin'
       }
-      this.title = "编辑";
-      this.dialogFormVisible = true;
+      this.$emit('fun', obj)
     },
-    handleAdd() {
-      this.title = "添加管理员";
-      this.dialogFormVisible = true;
-    },
-    handleDelete(index, row) {
-      console.log(index, row);
-    },
-    onSubmit(formName) {
-      this.$refs[formName].validate(valid => {
+    onSubmit (formName) {
+      this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.$http
-            .postUpdateAdmin(qs.stringify(this.admin_info))
-            .then(res => {
-              if (res.code === 200) {
-                this.$store.dispatch("action_get_admins");
-                this.dialogFormVisible = false;
-                this.$message({
-                  message: "更新成功",
-                  center: true,
-                  type: "success",
-                  customClass: "hint-message"
-                });
-              } else {
-                this.$message({
-                  message: res.msg,
-                  center: true,
-                  type: "error",
-                  customClass: "hint-message"
-                });
-              }
-            })
-            .catch(err => {
-              console.log(err, "err");
-            });
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
-      });
-    },
-    AddSubmit(formName) {
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          this.$http
-            .postAddAdmin(qs.stringify(this.admin_add_info))
-            .then(res => {
+          this.$http.postUpdateAdmin(qs.stringify(this.admin_info)).then(res => {
+            if (res.code === 200) {
+              this.$store.dispatch('action_get_admins')
+              this.dialogFormVisible = false
               this.$message({
-                message: "添加成功",
+                message: '更新成功',
                 center: true,
-                type: "success",
-                customClass: "hint-message"
-              });
-              this.dialogFormVisible = false;
-              this.$store.commit("ADD_ADMIN", this.admin_add_info);
-            });
+                type: 'success',
+                customClass: 'hint-message'
+              })
+            } else {
+              this.$message({
+                message: res.msg,
+                center: true,
+                type: 'error',
+                customClass: 'hint-message'
+              })
+            }
+          }).catch(err => {
+            console.log(err, 'err')
+          })
         } else {
-          return false;
+          console.log('error submit!!')
+          return false
         }
-      });
+      })
     },
-    query() {
-      this.$http
-        .getQuery(this.input_login_name, this.input_user_name)
-        .then(res => {
-          if (res.code === 200) {
+    AddSubmit (formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.$http.postAddAdmin(qs.stringify(this.admin_add_info)).then(res => {
             this.$message({
-              message: "查询成功",
+              message: '添加成功',
               center: true,
-              type: "success",
-              customClass: "hint-message"
-            });
-            this.$store.commit("RECEIVE_ADMINS", res.data);
-          }
-        })
-        .catch(err => {
-          console.log(err, "err");
-        });
-      this.input_login_name = "";
-      this.input_user_name = "";
+              type: 'success',
+              customClass: 'hint-message'
+            })
+            this.dialogFormVisible = false
+            this.$store.commit('ADD_ADMIN', this.admin_add_info)
+          })
+        } else {
+          return false
+        }
+      })
+    },
+    query () {
+      this.$http.getQuery(this.input_login_name, this.input_user_name).then(res => {
+        if (res.code === 200) {
+          this.$message({
+            message: '查询成功',
+            center: true,
+            type: 'success',
+            customClass: 'hint-message'
+          })
+          this.$store.commit('RECEIVE_ADMINS', res.data)
+        }
+      }).catch(err => {
+        console.log(err, 'err')
+      })
+      this.input_login_name = ''
+      this.input_user_name = ''
     }
   },
   computed: {
     admins: {
-      get() {
+      get () {
         return this.$store.getters.admins.map((item, index) => {
-          item["key"] = index + 1;
-          return item;
-        });
+          item['key'] = index + 1
+          return item
+        })
       },
-      set(val) {
+      set (val) {
         // 修改state中的值
-        this.$store.commit("RECEIVE_ADMINS", val);
+        this.$store.commit('RECEIVE_ADMINS', val)
       }
     }
-  }
-};
+  },
+}
 </script>
 
 <style lang="scss" scoped>
@@ -279,7 +270,7 @@ $mainColor: #63b9be;
   &_top {
     display: flex;
     &_input {
-      width: 35%;
+      width: 38%;
     }
     // &_btn {
     //   @include flex;
@@ -290,21 +281,6 @@ $mainColor: #63b9be;
   }
   &_allbtn {
     margin: 20px 0;
-  }
-}
-.select_list {
-  padding: 0 20px;
-  &_item {
-    width: 50%;
-    padding: 10px 0;
-    border-bottom:1px solid $backColor;
-    span {
-      width: 15%;
-      display: inline-block;
-    }
-    &:hover {
-      background-color: $backColor;
-    }
   }
 }
 </style>
