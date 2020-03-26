@@ -3,6 +3,8 @@ import App from './App.vue'
 import router from './router'
 import 'element-ui/lib/theme-chalk/index.css'
 import ElementUI from 'element-ui'
+import { codemirror } from 'vue-codemirror'
+import 'codemirror/lib/codemirror.css'
 import store from './store'
 import * as ajax from '@/api' // 引入axios的 ajax方法
 import './assets/scss/element-variables.scss'  // 修改主题
@@ -12,6 +14,7 @@ Vue.prototype.$http = ajax
 Vue.config.productionTip = false
 
 Vue.use(ElementUI)
+Vue.use(codemirror)
 const whiteList = ['/login']
 // 配置全局导航守卫
 router.beforeEach(async (to, from, next) => {

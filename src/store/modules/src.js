@@ -64,22 +64,6 @@ const actions = {
       resolve() // 接口请求完成
     })
   },
-  action_get_two_src ({ commit }, n, p) {
-    return new Promise(async (resolve, reject) => {
-      const res = await ajax.getTwoSrcPage(n, p)
-      if (res === null) return
-      commit('RECEIVE_TWO_SRC', res.data)
-      resolve() // 接口请求完成
-    })
-  },
-  action_get_two_src_count ({ commit }) {
-    return new Promise(async (resolve, reject) => {
-      const res = await ajax.getTwoSrcCount()
-      if (res === null) return
-      commit('RECEIVE_TWO_SRC_COUNT', res.count)
-      resolve() // 接口请求完成
-    })
-  },
   action_get_three_src ({ commit }, n, p) {
     return new Promise(async (resolve, reject) => {
       const res = await ajax.getThreeSrcPage(n, p)

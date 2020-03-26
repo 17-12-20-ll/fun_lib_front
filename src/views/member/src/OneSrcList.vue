@@ -31,25 +31,33 @@
               type="primary"
               plain
               @click="handleView(scope.$index, scope.row)"
-            >查看</el-button>
+            >查看
+            </el-button>
             <el-button
               size="mini"
               type="success"
               plain
               @click="handleEdit(scope.$index, scope.row)"
-            >编辑</el-button>
+            >编辑
+            </el-button>
             <el-button
               size="mini"
               type="danger"
               plain
               @click="handleDelete(scope.$index, scope.row)"
-            >删除</el-button>
+            >删除
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
-      <Pagination :total="one_src_count" :type="'one_src'" />
+      <el-pagination
+        layout="prev, pager, next"
+        :total="one_src_count"
+        :page-size="page_count"
+        @current-change="change">
+      </el-pagination>
     </div>
-<!-- 模态 -->
+    <!-- 模态 -->
     <el-dialog
       :title="title"
       :visible.sync="dialogFormVisible"
@@ -99,173 +107,183 @@
 </template>
 
 <script>
-import qs from "qs";
-import Pagination from "@/components/Common/Pagination";
+import qs from 'qs'
+import Pagination from '@/components/Common/Pagination'
 
 export default {
-  name: "GroupList",
-  data() {
+  name: 'GroupList',
+  data () {
     return {
       multipleSelection: [],
       dialogFormVisible: false,
-      title: "",
+      title: '',
       one_src_info: {
-        desc: "",
+        desc: '',
         groups: [],
-        name: "",
+        name: '',
         pos: 0
       },
       edit_groups: [],
       rules: {
         name: [
-          { required: true, message: "输入资源名", trigger: "blur" },
-          { min: 2, max: 25, message: "长度在 2 到 25 个字符", trigger: "blur" }
+          { required: true, message: '输入资源名', trigger: 'blur' },
+          { min: 2, max: 25, message: '长度在 2 到 25 个字符', trigger: 'blur' }
         ],
-        pos: [{ required: true, message: "输入位置序号", trigger: "blur" }]
+        pos: [{ required: true, message: '输入位置序号', trigger: 'blur' }]
       },
-      id: "", // 当前编辑id
-      inputOneSrc: ""
-    };
+      id: '', // 当前编辑id
+      inputOneSrc: '',
+      page: 1,
+      one_src_count: 0,
+      page_count: 10
+    }
   },
   components: { Pagination },
-  mounted() {
-    this.$store.dispatch("action_get_one_src", 1);
-    this.$store.dispatch("action_get_one_src_count");
+  mounted () {
+    this.get_data()
   },
   methods: {
-    async handleView(index, row) {
-      this.title = "查看";
-      this.dialogFormVisible = true;
+    async handleView (index, row) {
+      this.title = '查看'
+      this.dialogFormVisible = true
       // 发送请求获取详情数据
       await this.$http
         .getOneSrcInfo(row.id)
         .then(res => {
-          this.one_src_info = res.data;
+          this.one_src_info = res.data
           this.edit_groups = res.data.groups.map(obj => {
-            return obj.id;
-          });
+            return obj.id
+          })
         })
         .catch(err => {
-          console.log(err, "err");
-        });
+          console.log(err, 'err')
+        })
     },
-    async handleEdit(index, row) {
+    async handleEdit (index, row) {
       await this.$http
         .getOneSrcInfo(row.id)
         .then(res => {
-          this.one_src_info = res.data;
+          this.one_src_info = res.data
           this.edit_groups = res.data.groups.map(obj => {
-            return obj.id;
-          });
+            return obj.id
+          })
         })
         .catch(err => {
-          console.log(err, "err");
-        });
-      this.title = "编辑";
-      this.dialogFormVisible = true;
-      this.id = row.id;
+          console.log(err, 'err')
+        })
+      this.title = '编辑'
+      this.dialogFormVisible = true
+      this.id = row.id
     },
-    handleDelete(index, row) {
-      console.log("删除");
+    handleDelete (index, row) {
+      console.log('删除')
     },
-    handleSelectionChange(val) {
-      this.multipleSelection = val;
+    handleSelectionChange (val) {
+      this.multipleSelection = val
     },
-    onSubmit(formName) {
+    onSubmit (formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          this.one_src_info.groups = JSON.stringify(this.edit_groups);
-          this.one_src_info.id = this.id;
+          this.one_src_info.groups = JSON.stringify(this.edit_groups)
+          this.one_src_info.id = this.id
           this.$http
             .postUpdateOneSrc(qs.stringify(this.one_src_info))
             .then(res => {
               if (res.code === 200) {
-                this.$store.dispatch("action_get_one_src", 1);
-                this.dialogFormVisible = false;
+                this.$store.dispatch('action_get_one_src', 1)
+                this.dialogFormVisible = false
                 this.$message({
-                  message: "更新成功",
+                  message: '更新成功',
                   center: true,
-                  type: "success",
-                  customClass: "hint-message"
-                });
+                  type: 'success',
+                  customClass: 'hint-message'
+                })
               } else {
                 this.$message({
                   message: res.msg,
                   center: true,
-                  type: "error",
-                  customClass: "hint-message"
-                });
+                  type: 'error',
+                  customClass: 'hint-message'
+                })
               }
             })
             .catch(err => {
-              console.log(err, "err");
-            });
+              console.log(err, 'err')
+            })
         } else {
-          console.log("error submit!!");
-          return false;
+          console.log('error submit!!')
+          return false
         }
-      });
+      })
     },
-    query() {
-      // 查询
+    change (p) {
+      this.page = p
+      this.get_data()
+    },
+
+    get_data () {
       this.$http
-        .queryOneSrc(this.inputOneSrc)
+        .getOneSrc(this.inputOneSrc, this.page, this.page_count)
         .then(res => {
           if (res.code === 200) {
-            this.$message({
-              message: "查询成功",
-              center: true,
-              type: "success",
-              customClass: "hint-message"
-            });
-            this.$store.commit("RECEIVE_ONE_SRC", res.data);
+            if (this.inputOneSrc) {
+              this.$message({
+                message: '查询成功',
+                center: true,
+                type: 'success',
+                customClass: 'hint-message'
+              })
+            }
+            this.one_src_count = res.count
+            this.$store.commit('RECEIVE_ONE_SRC', res.data)
           }
         })
         .catch(err => {
-          console.log(err, "err");
-        });
-      this.inputOneSrc = "";
+          console.log(err, 'err')
+        })
     },
-    handleAdd() {
+    query () {
+      // 查询
+      this.page = 1
+      this.get_data()
+    },
+    handleAdd () {
       // 添加
     }
   },
   computed: {
     one_src: {
-      get() {
+      get () {
         return this.$store.getters.one_src.map((item, index) => {
-          item["key"] = index + 1;
-          return item;
-        });
+          item['key'] = index + 1
+          return item
+        })
       }
     },
     user_groups: {
-      get() {
+      get () {
         if (!this.$store.getters.groups.length) {
-          this.$store.dispatch("getGroups");
+          this.$store.dispatch('getGroups')
         }
-        return this.$store.getters.groups;
+        return this.$store.getters.groups
       }
     },
-    one_src_count() {
-      return this.$store.getters.one_src_count;
-    }
   }
-};
+}
 </script>
 
 <style scoped>
-.top {
-  display: flex;
-  line-height: 30px;
-}
+  .top {
+    display: flex;
+    line-height: 30px;
+  }
 
-.el-input {
-  width: 300px;
-}
+  .el-input {
+    width: 300px;
+  }
 </style>
 <style>
-.foot .el-form-item__content {
-  text-align: center;
-}
+  .foot .el-form-item__content {
+    text-align: center;
+  }
 </style>

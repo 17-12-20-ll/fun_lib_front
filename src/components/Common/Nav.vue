@@ -30,11 +30,11 @@
       </el-menu-item>
       <el-menu-item index="/member/three">
         <i class="el-icon-setting"></i>
-        <span slot="title">账号资源列表</span>
+        <span slot="title">资源入口列表</span>
       </el-menu-item>
       <el-menu-item index="/member/four">
         <i class="el-icon-setting"></i>
-        <span slot="title">资源入口列表</span>
+        <span slot="title">账号资源列表</span>
       </el-menu-item>
       <el-menu-item index="/member/tradetype">
         <i class="el-icon-setting"></i>

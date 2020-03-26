@@ -10,45 +10,49 @@
       </div>
     </div>
     <div class="table_content">
-    <el-table
-      ref="multipleTable"
-      :data="groups"
-      tooltip-effect="dark"
-      style="width: 100%"
-      @selection-change="handleSelectionChange">
-      <el-table-column
-        type="selection"
-        width="55">
-      </el-table-column>
-      <el-table-column
-        prop="key"
-        label="序号"
-        width="300">
-        <!--        <template slot-scope="scope">{{ scope.row.date }}</template>-->
-      </el-table-column>
-      <el-table-column
-        prop="name"
-        label="分组名"
-      >
-      </el-table-column>
-      <el-table-column label="操作">
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            @click="handleView(scope.$index, scope.row)">查看
-          </el-button>
-          <el-button
-            size="mini"
-            @click="handleEdit(scope.$index, scope.row)">编辑
-          </el-button>
-          <el-button
-            size="mini"
-            type="danger"
-            @click="handleDelete(scope.$index, scope.row)">删除
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+      <el-table
+        ref="multipleTable"
+        :data="groups"
+        tooltip-effect="dark"
+        style="width: 100%"
+        @selection-change="handleSelectionChange">
+        <el-table-column
+          type="selection"
+          width="55">
+        </el-table-column>
+        <el-table-column
+          prop="key"
+          label="序号"
+          width="300">
+          <!--        <template slot-scope="scope">{{ scope.row.date }}</template>-->
+        </el-table-column>
+        <el-table-column
+          prop="name"
+          label="分组名"
+        >
+        </el-table-column>
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-button
+              size="mini"
+              @click="handleView(scope.$index, scope.row)">查看
+            </el-button>
+            <el-button
+              size="mini"
+              @click="handleEdit(scope.$index, scope.row)">编辑
+            </el-button>
+            <el-button
+              size="mini"
+              @click="viewOneSrc(scope.row)">查看所有资源
+            </el-button>
+            <el-button
+              size="mini"
+              type="danger"
+              @click="handleDelete(scope.$index, scope.row)">删除
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
     </div>
     <el-dialog :title="title" :visible.sync="dialogFormVisible">
       <el-form :model="groupInfo" v-if="title === '编辑'" :rules="rules" ref="groupInfo">
@@ -80,6 +84,23 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+    <!--打开分组所属资源-->
+    <el-dialog :title="res_title" :visible.sync="dialogTableVisible">
+      <div class="table_data">
+        <el-table :data="resData">
+          <el-table-column property="key" label="序号" width="100"></el-table-column>
+          <el-table-column property="one_src" label="资源列表" width="300"></el-table-column>
+          <el-table-column property="name" label="标题" width="300"></el-table-column>
+          <el-table-column property="add_time" label="添加时间"></el-table-column>
+        </el-table>
+        <el-pagination
+          layout="prev, pager, next"
+          :total="res_data_count"
+          :page-size="page_count"
+          @current-change="change">
+        </el-pagination>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -90,10 +111,17 @@ export default {
   name: 'GroupList',
   data () {
     return {
+      page: 1,
+      res_data_count: 0,
+      page_count: 10,
+      row_id: 1,
       multipleSelection: [],
       dialogFormVisible: false,
+      dialogTableVisible: false,
       inputGroupName: '',
+      resData: [],
       title: '',
+      res_title: '',
       groupInfo: {
         name: '',
         desc: ''
@@ -177,11 +205,11 @@ export default {
         Object.keys(this.groupAddInfo).forEach(key => this.groupAddInfo[key] = '')
       })
     },
-    handleEdit (index, row) {
+    async handleEdit (index, row) {
       this.title = '编辑'
       this.dialogFormVisible = true
       // 发送请求获取详情数据
-      this.$http.getGroupsInfoApi(row.id).then(res => {
+      await this.$http.getGroupsInfoApi(row.id).then(res => {
         this.groupInfo = res.data
       }).catch(err => {
         console.log(err, 'err')
@@ -217,7 +245,32 @@ export default {
           return false
         }
       })
-    }
+    },
+    viewOneSrc (row) {
+      this.res_title = row.name
+      this.row_id = row.id
+      this.dialogTableVisible = true
+      this.get_data()
+    },
+    async get_data () {
+      await this.$http.getGroupOneSrc(this.row_id, this.page, this.page_count).then(res => {
+        if (res.code === 200) {
+          this.resData = res.data.map((item, index) => {
+            item['key'] = index + 1
+            return item
+          })
+          this.res_data_count = res.count
+        } else {
+          alert('服务器错误！！')
+        }
+      }).catch(err => {
+        console.log(err, 'err')
+      })
+    },
+    change (p) {
+      this.page = p
+      this.get_data()
+    },
   },
   computed: {
     groups: {

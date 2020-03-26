@@ -158,13 +158,11 @@ export default {
       })
     },
     async handleEdit (index, row) {
-      if (!this.admin_info.login_name) {
-        await this.$http.getAdminInfo(row.id).then(res => {
-          this.admin_info = res.data
-        }).catch(err => {
-          console.log(err, 'err')
-        })
-      }
+      await this.$http.getAdminInfo(row.id).then(res => {
+        this.admin_info = res.data
+      }).catch(err => {
+        console.log(err, 'err')
+      })
       this.title = '编辑'
       this.dialogFormVisible = true
     },
@@ -259,38 +257,45 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$backColor:rgb(242, 242, 242);
-$mainColor: #63b9be;
-.admin_warp {
-  &_top {
-    display: flex;
-    &_input {
-      width: 35%;
+  $backColor: rgb(242, 242, 242);
+  $mainColor: #63b9be;
+  .admin_warp {
+    &_top {
+      display: flex;
+
+      &_input {
+        width: 35%;
+      }
+
+      // &_btn {
+      //   @include flex;
+      //   width: 8%;
+      //   margin-left: 35px;
+      //   font-size: 13px;
+      // }
     }
-    // &_btn {
-    //   @include flex;
-    //   width: 8%;
-    //   margin-left: 35px;
-    //   font-size: 13px;
-    // }
-  }
-  &_allbtn {
-    margin: 20px 0;
-  }
-}
-.select_list {
-  padding: 0 20px;
-  &_item {
-    width: 50%;
-    padding: 10px 0;
-    border-bottom:1px solid $backColor;
-    span {
-      width: 15%;
-      display: inline-block;
-    }
-    &:hover {
-      background-color: $backColor;
+
+    &_allbtn {
+      margin: 20px 0;
     }
   }
-}
+
+  .select_list {
+    padding: 0 20px;
+
+    &_item {
+      width: 50%;
+      padding: 10px 0;
+      border-bottom: 1px solid $backColor;
+
+      span {
+        width: 15%;
+        display: inline-block;
+      }
+
+      &:hover {
+        background-color: $backColor;
+      }
+    }
+  }
 </style>

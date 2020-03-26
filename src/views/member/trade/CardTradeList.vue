@@ -30,7 +30,7 @@
       <el-table-column
         prop="card_id"
         label="卡号"
-        width="120"
+        width="300"
         show-overflow-tooltip>
       </el-table-column>
       <el-table-column

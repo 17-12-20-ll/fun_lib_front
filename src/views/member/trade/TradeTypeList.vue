@@ -1,9 +1,9 @@
 <template>
   <div class="content-warp">
     <div class="top-wrap">
-        <el-input size="small" v-model="inputName" placeholder="请输入内容" label="名称" clearable>
-          <template slot="prepend">名称：</template>
-        </el-input>
+      <el-input size="small" v-model="inputName" placeholder="请输入内容" label="名称" clearable>
+        <template slot="prepend">名称：</template>
+      </el-input>
       <div class="head_btn">
         <el-button type="primary" size="mini" class="admin-btn" @click="query">查询</el-button>
         <el-button type="success" size="mini" class="admin-btn" @click="handleAdd">添加</el-button>
@@ -11,54 +11,54 @@
     </div>
     <div class="table_content">
       <el-table
-      ref="multipleTable"
-      :data="trade_types"
-      tooltip-effect="dark"
-      style="width: 100%"
-      @selection-change="handleSelectionChange">
-      <el-table-column
-        type="selection"
-        width="55">
-      </el-table-column>
-      <el-table-column
-        prop="key"
-        label="序号"
-        width="120">
-      </el-table-column>
-      <el-table-column
-        prop="name"
-        label="名称"
-        align="center">
-      </el-table-column>
-      <el-table-column
-        prop="price"
-        label="价格"
-        width="120"
-        show-overflow-tooltip>
-      </el-table-column>
-      <el-table-column
-        prop="days"
-        label="天数"
-        width="120"
-        show-overflow-tooltip>
-      </el-table-column>
-      <el-table-column label="操作" width="300">
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="primary"
-            plain
-            @click="handleEdit(scope.$index, scope.row)">编辑
-          </el-button>
-          <el-button
-            size="mini"
-            type="danger"
-            plain
-            @click="handleDelete(scope.$index, scope.row)">删除
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+        ref="multipleTable"
+        :data="trade_types"
+        tooltip-effect="dark"
+        style="width: 100%"
+        @selection-change="handleSelectionChange">
+        <el-table-column
+          type="selection"
+          width="55">
+        </el-table-column>
+        <el-table-column
+          prop="key"
+          label="序号"
+          width="120">
+        </el-table-column>
+        <el-table-column
+          prop="name"
+          label="名称"
+          align="center">
+        </el-table-column>
+        <el-table-column
+          prop="price"
+          label="价格"
+          width="120"
+          show-overflow-tooltip>
+        </el-table-column>
+        <el-table-column
+          prop="days"
+          label="天数"
+          width="120"
+          show-overflow-tooltip>
+        </el-table-column>
+        <el-table-column label="操作" width="300">
+          <template slot-scope="scope">
+            <el-button
+              size="mini"
+              type="primary"
+              plain
+              @click="handleEdit(scope.$index, scope.row)">编辑
+            </el-button>
+            <el-button
+              size="mini"
+              type="danger"
+              plain
+              @click="handleDelete(scope.$index, scope.row)">删除
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
     </div>
     <el-dialog :title="title" :visible.sync="dialogFormVisible" width="30%" :destroy-on-close="true">
       <el-form :model="trade_type_info" ref="trade_type_info" class="form-center">

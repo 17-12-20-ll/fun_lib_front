@@ -85,10 +85,26 @@
           <el-input v-model="three_edit_info.url" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="排序位置" label-width="100px">
-          <el-input-number v-model="three_edit_info.pos" autocomplete="off"></el-input-number>
+          <el-input v-model.number="three_edit_info.pos" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="所属二级资源" label-width="100px">
-          <el-input v-model="three_edit_info.two_src" autocomplete="off" disabled></el-input>
+          <el-select
+            v-model="three_edit_info.two_src"
+            placeholder="请输入内容"
+            :clearable="true"
+            :filterable="true"
+            style="width:40%"
+            :multiple-limit="1"
+          >
+            <el-option
+              v-for="item in restaurants"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            >
+              <span style="color: #8492a6;">{{ item.name }}</span>
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="所属账号" label-width="100px">
           <el-select v-model="three_edit_info.four_src" placeholder="请选择资源类型">
@@ -99,7 +115,7 @@
           <el-input type="textarea" v-model="three_edit_info.desc" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="EditSubmit('three_info')">添加</el-button>
+          <el-button type="primary" @click="EditSubmit('three_info')">修改</el-button>
           <el-button>取消</el-button>
         </el-form-item>
       </el-form>
@@ -115,6 +131,7 @@ export default {
   name: 'ThreeSrcList',
   data () {
     return {
+      test: '',
       multipleSelection: [],
       title: '',
       dialogFormVisible: false,
@@ -131,16 +148,28 @@ export default {
       },
       three_edit_info: {},
       id: '',
-      all_four_src: ''
+      all_four_src: '',
+      restaurants: []
     }
   },
   mounted () {
     this.update()
+    this.loadAll()
   },
   components: {
     Pagination
   },
   methods: {
+    async loadAll () {
+      // 获取二级资源数据
+      await this.$http.getTwoSrcAll().then(res => {
+        if (res.code === 200) {
+          this.restaurants = res.data
+        }
+      }).catch(err => {
+        console.log(err, 'err')
+      })
+    },
     async handleView (index, row) {
       this.title = '查看'
       this.dialogFormVisible = true
@@ -176,7 +205,7 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.three_edit_info.id = this.id
-          this.$http.postUpdateThreeSrc(qs.stringify(this.four_info)).then(res => {
+          this.$http.postUpdateThreeSrc(qs.stringify(this.three_edit_info)).then(res => {
             if (res.code === 200) {
               this.dialogFormVisible = false
               this.$message({

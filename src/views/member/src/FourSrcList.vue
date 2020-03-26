@@ -27,7 +27,7 @@
           <!--        <template slot-scope="scope">{{ scope.row.date }}</template>-->
         </el-table-column>
         <el-table-column prop="name" label="链接名字" width="120"></el-table-column>
-        <el-table-column prop="code" label="编码" width="120" ></el-table-column>
+        <el-table-column prop="code" label="编码" width="120"></el-table-column>
         <el-table-column prop="url" label="链接" show-overflow-tooltip></el-table-column>
         <el-table-column prop="username" label="账号" width="180" show-overflow-tooltip></el-table-column>
         <el-table-column prop="pwd" label="密码" width="180" show-overflow-tooltip></el-table-column>
@@ -58,33 +58,54 @@
           </template>
         </el-table-column>
       </el-table>
-      <Pagination :total="four_src_count" :type="'four_src'"/>
+      <el-pagination
+        layout="prev, pager, next"
+        :total="four_src_count"
+        :page-size="page_count"
+        @current-change="change">
+      </el-pagination>
     </div>
 
     <el-dialog :title="title" :visible.sync="dialogFormVisible">
       <div v-if="title === '查看'">
-        <el-divider>链接地址:{{four_info.name}}</el-divider>
+        <el-divider>所属名称:{{four_info.name}}</el-divider>
         <el-divider>编码:{{four_info.code}}</el-divider>
+        <el-divider>链接:{{four_info.url}}</el-divider>
         <el-divider>详情:{{four_info.desc}}</el-divider>
         <el-divider>账号:{{four_info.username}}</el-divider>
         <el-divider>密码:{{four_info.pwd}}</el-divider>
+        <el-divider>cookie脚本:{{four_info.code_script}}</el-divider>
+        <el-divider>过期时长:{{four_info.cookie_time}}</el-divider>
+        <el-divider>cookie:{{four_info.cookie}}</el-divider>
         <el-divider>添加时间:{{four_info.add_time}}</el-divider>
       </div>
       <el-form :model="four_add_info" v-else-if="title === '添加'" ref="four_add_info">
-        <el-form-item label="账号链接" label-width="100px" prop="name">
+        <el-form-item label="所属名称" label-width="100px" prop="name">
           <el-input v-model="four_add_info.name" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="编码" label-width="100px" prop="code">
           <el-input v-model="four_add_info.code" autocomplete="off"></el-input>
         </el-form-item>
+        <el-form-item label="链接" label-width="100px" prop="code">
+          <el-input v-model="four_add_info.url" autocomplete="off"></el-input>
+        </el-form-item>
         <el-form-item label="账号" label-width="100px">
-          <el-input v-model.number="four_add_info.username" autocomplete="off"></el-input>
+          <el-input v-model="four_add_info.username" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="密码" label-width="100px">
-          <el-input v-model.number="four_add_info.pwd" autocomplete="off"></el-input>
+          <el-input v-model="four_add_info.pwd" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="cookie" label-width="100px">
+          <el-input v-model="four_add_info.cookie" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="cookie时长" label-width="100px">
+          <el-input v-model.number="four_add_info.cookie_time" autocomplete="off" placeholder="过期时长，单位min"></el-input>
         </el-form-item>
         <el-form-item label="账号描述" prop="desc">
           <el-input type="textarea" v-model="four_add_info.desc" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="执行脚本" prop="code_script">
+          <el-input type="textarea" v-model="four_add_info.code_script" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="AddSubmit('four_add_info')">添加</el-button>
@@ -98,14 +119,26 @@
         <el-form-item label="编码" label-width="100px" prop="code">
           <el-input v-model="four_info.code" autocomplete="off"></el-input>
         </el-form-item>
+        <el-form-item label="链接" label-width="100px" prop="code">
+          <el-input v-model="four_info.url" autocomplete="off"></el-input>
+        </el-form-item>
         <el-form-item label="账号" label-width="100px">
-          <el-input v-model.number="four_info.username" autocomplete="off"></el-input>
+          <el-input v-model="four_info.username" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="密码" label-width="100px">
-          <el-input v-model.number="four_info.pwd" autocomplete="off"></el-input>
+          <el-input v-model="four_info.pwd" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="cookie" label-width="100px">
+          <el-input v-model="four_info.cookie" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="cookie时长" label-width="100px">
+          <el-input v-model.number="four_info.cookie_time" autocomplete="off" placeholder="过期时长，单位min"></el-input>
         </el-form-item>
         <el-form-item label="账号描述" prop="desc">
           <el-input type="textarea" v-model="four_info.desc" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="执行脚本" prop="code_script">
+          <el-input type="textarea" v-model="four_info.code_script" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmit('four_info')">提交</el-button>
@@ -135,24 +168,34 @@ export default {
         desc: '',
         username: '',
         pwd: '',
+        code_script: '',
+        cookie_time: '',
+        cookie: '',
         add_time: ''
       },
       four_add_info: {
         name: '',
+        url: '',
         code: '',
         desc: '',
         username: '',
         pwd: '',
+        code_script: '',
+        cookie_time: '',
+        cookie: '',
       },
       id: '',
-      multipleSelection: []
+      multipleSelection: [],
+      page: 1,
+      four_src_count: 0,
+      page_count: 10
     }
   },
   components: {
     Pagination
   },
   mounted () {
-    this.update()
+    this.get_data()
   },
   methods: {
     async handleView (index, row) {
@@ -221,7 +264,7 @@ export default {
         if (valid) {
           this.$http.postAddFourSrc(qs.stringify(this.four_add_info)).then(res => {
             if (res.code === 200) {
-              this.update()
+              this.get_data()
               this.dialogFormVisible = false
               this.$message({
                 message: '添加成功',
@@ -236,27 +279,32 @@ export default {
         }
       })
     },
-    update () {
-      this.$store.dispatch('action_get_four_src', 1)
-      this.$store.dispatch('action_get_four_src_count')
-    },
-    query () {
-      // 查询
-      this.$http.queryFourSrc(this.inputName, this.inputCode).then(res => {
+    get_data () {
+      this.$http.getFourSrc(this.inputName, this.inputCode, this.page, this.page_count).then(res => {
         if (res.code === 200) {
-          this.$message({
-            message: '查询成功',
-            center: true,
-            type: 'success',
-            customClass: 'hint-message'
-          })
+          if (this.inputName || this.inputCode) {
+            this.$message({
+              message: '查询成功',
+              center: true,
+              type: 'success',
+              customClass: 'hint-message'
+            })
+          }
+          this.four_src_count = res.count
           this.$store.commit('RECEIVE_FOUR_SRC', res.data)
         }
       }).catch(err => {
         console.log(err, 'err')
       })
-      this.inputName = ''
-      this.inputCode = ''
+    },
+    change (p) {
+      this.page = p
+      this.get_data()
+    },
+    query () {
+      // 查询
+      this.page = 1
+      this.get_data()
     },
   },
   computed: {
@@ -266,9 +314,6 @@ export default {
         return item
       })
     },
-    four_src_count () {
-      return this.$store.getters.four_src_count
-    }
   }
 }
 </script>

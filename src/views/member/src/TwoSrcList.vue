@@ -36,29 +36,38 @@
               type="primary"
               plain
               @click="handleView(scope.$index, scope.row)"
-            >查看</el-button>
+            >查看
+            </el-button>
             <el-button
               size="mini"
               type="success"
               plain
               @click="handleEdit(scope.$index, scope.row)"
-            >编辑</el-button>
+            >编辑
+            </el-button>
             <el-button
               size="mini"
               type="danger"
               plain
               @click="handleDelete(scope.$index, scope.row)"
-            >删除</el-button>
+            >删除
+            </el-button>
             <el-button
               size="mini"
               type="success"
               plain
               @click="handleAddEntrance(scope.$index, scope.row)"
-            >添加入口</el-button>
+            >添加入口
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
-      <Pagination :total="two_src_count" :type="'two_src'" />
+      <el-pagination
+        layout="prev, pager, next"
+        :total="two_src_count"
+        :page-size="page_count"
+        @current-change="change">
+      </el-pagination>
     </div>
     <el-dialog
       :title="title"
@@ -172,257 +181,265 @@
 </template>
 
 <script>
-import qs from "qs";
-import Pagination from "@/components/Common/Pagination";
+import qs from 'qs'
+import Pagination from '@/components/Common/Pagination'
 
 export default {
-  data() {
+  data () {
     return {
       multipleSelection: [],
       dialogFormVisible: false,
-      title: "",
+      title: '',
       two_src_add_info: {
-        name: "",
-        title_url: "",
-        content: "",
+        name: '',
+        title_url: '',
+        content: '',
         pos: 1,
         src_type: null,
-        one_src: ""
+        one_src: ''
       },
       two_src_info: {
-        name: "",
-        title_url: "",
-        content: "",
+        name: '',
+        title_url: '',
+        content: '',
         pos: 0,
         src_type: null,
-        one_src: "",
-        one_src_id: ""
+        one_src: '',
+        one_src_id: ''
       },
       three_info: {
-        name: "",
-        url: "",
+        name: '',
+        url: '',
         pos: 0,
-        four_src: "",
-        desc: ""
+        four_src: '',
+        desc: ''
       },
       rules: {
         name: [
-          { required: true, message: "输入资源名", trigger: "blur" },
-          { min: 2, max: 25, message: "长度在 2 到 25 个字符", trigger: "blur" }
+          { required: true, message: '输入资源名', trigger: 'blur' },
+          { min: 2, max: 25, message: '长度在 2 到 25 个字符', trigger: 'blur' }
         ],
-        pos: [{ required: true, message: "输入位置序号", trigger: "blur" }]
+        pos: [{ required: true, message: '输入位置序号', trigger: 'blur' }]
       },
-      inputTwoSrc: "",
-      selectOneSrc: "",
-      id: "",
+      inputTwoSrc: '',
+      selectOneSrc: '',
+      id: '',
       src_types: [
         {
           id: 1,
-          name: "文件方式(下级文件)"
+          name: '文件方式(下级文件)'
         },
         {
           id: 2,
-          name: "记住密码方式(可下级)"
+          name: '记住密码方式(可下级)'
         },
         {
           id: 3,
-          name: "链接方式(终结点级)"
+          name: '链接方式(终结点级)'
         },
         {
           id: 4,
-          name: "代理方式(终结点级)"
+          name: '代理方式(终结点级)'
         }
       ],
-      add_entrance_id: "",
-      all_four_src: []
-    };
+      add_entrance_id: '',
+      all_four_src: [],
+      page: 1,
+      two_src_count: 0,
+      page_count: 10
+    }
   },
   components: {
     Pagination
   },
-  mounted() {
-    this.$store.dispatch("action_get_two_src", 1);
-    this.$store.dispatch("action_get_two_src_count");
-    if (this.one_src.length === 0) {
-      this.$store.dispatch("action_get_one_src", 1);
-    }
+  mounted () {
+    this.get_data()
+    this.$store.dispatch('action_get_one_src', 1)
   },
   methods: {
-    async handleView(index, row) {
-      this.title = "查看";
-      this.dialogFormVisible = true;
+    async handleView (index, row) {
+      this.title = '查看'
+      this.dialogFormVisible = true
       // 发送请求获取详情数据
       await this.$http
         .getTwoSrcDetail(row.id)
         .then(res => {
-          this.two_src_info = res.data;
+          this.two_src_info = res.data
         })
         .catch(err => {
-          console.log(err, "err");
-        });
+          console.log(err, 'err')
+        })
     },
-    async handleEdit(index, row) {
-      this.id = row.id;
+    async handleEdit (index, row) {
+      this.id = row.id
       await this.$http
         .getTwoSrcDetail(row.id)
         .then(res => {
-          this.two_src_info = res.data;
+          this.two_src_info = res.data
         })
         .catch(err => {
-          console.log(err, "err");
-        });
-      this.title = "编辑";
-      this.dialogFormVisible = true;
+          console.log(err, 'err')
+        })
+      this.title = '编辑'
+      this.dialogFormVisible = true
     },
-    handleDelete(index, row) {
-      console.log("删除");
+    handleDelete (index, row) {
+      console.log('删除')
     },
     //添加入口资源
-    async handleAddEntrance(index, row) {
-      this.dialogFormVisible = true;
-      this.title = "添加入口";
-      this.add_entrance_id = row.id;
+    async handleAddEntrance (index, row) {
+      this.dialogFormVisible = true
+      this.title = '添加入口'
+      this.add_entrance_id = row.id
       await this.$http
         .getFourSrcAllInfo()
         .then(res => {
-          this.all_four_src = res.data;
+          this.all_four_src = res.data
         })
         .catch(err => {
-          console.log(err, "err");
-        });
+          console.log(err, 'err')
+        })
     },
-    handleSelectionChange(val) {
-      this.multipleSelection = val;
+    handleSelectionChange (val) {
+      this.multipleSelection = val
     },
-    AddEntranceSubmit(formName) {
+    AddEntranceSubmit (formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          this.three_info.two_src = this.add_entrance_id;
+          this.three_info.two_src = this.add_entrance_id
           this.$http
             .postAddThreeSrc(qs.stringify(this.three_info))
             .then(res => {
               if (res.code === 200) {
-                this.dialogFormVisible = false;
+                this.dialogFormVisible = false
                 this.$message({
-                  message: "添加成功",
+                  message: '添加成功',
                   center: true,
-                  type: "success",
-                  customClass: "hint-message"
-                });
+                  type: 'success',
+                  customClass: 'hint-message'
+                })
               }
             })
             .catch(er => {
-              console.log(er, "er");
-            });
+              console.log(er, 'er')
+            })
         } else {
-          return false;
+          return false
         }
-      });
+      })
     },
-    onSubmit(formName) {
+    onSubmit (formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          this.two_src_info.id = this.id;
+          this.two_src_info.id = this.id
           this.$http
             .postUpdateTwoSrc(qs.stringify(this.two_src_info))
             .then(res => {
               if (res.code === 200) {
                 // this.$store.dispatch('action_get_two_src', 1, 10)
-                this.$store.commit("UPDATE_TWO_SRC", res.data);
-                this.dialogFormVisible = false;
+                this.$store.commit('UPDATE_TWO_SRC', res.data)
+                this.dialogFormVisible = false
                 this.$message({
-                  message: "更新成功",
+                  message: '更新成功',
                   center: true,
-                  type: "success",
-                  customClass: "hint-message"
-                });
+                  type: 'success',
+                  customClass: 'hint-message'
+                })
               } else {
                 this.$message({
                   message: res.msg,
                   center: true,
-                  type: "error",
-                  customClass: "hint-message"
-                });
+                  type: 'error',
+                  customClass: 'hint-message'
+                })
               }
             })
             .catch(err => {
-              console.log(err, "err");
-            });
+              console.log(err, 'err')
+            })
         } else {
-          console.log("error submit!!");
-          return false;
+          console.log('error submit!!')
+          return false
         }
-      });
+      })
     },
-    AddSubmit(formName) {
+    AddSubmit (formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.$http
             .postAddTwoSrc(qs.stringify(this.two_src_add_info))
             .then(res => {
               if (res.code === 200) {
-                this.dialogFormVisible = false;
+                this.dialogFormVisible = false
                 this.$message({
-                  message: "添加成功",
+                  message: '添加成功',
                   center: true,
-                  type: "success",
-                  customClass: "hint-message"
-                });
+                  type: 'success',
+                  customClass: 'hint-message'
+                })
               }
             })
             .catch(err => {
-              console.log(err, "err");
-            });
+              console.log(err, 'err')
+            })
         }
-      });
+      })
     },
-    query() {
-      // 查询
+
+    get_data () {
       this.$http
-        .queryTwoSrc(this.inputTwoSrc, this.selectOneSrc)
+        .getTwoSrc(this.inputTwoSrc, this.selectOneSrc, this.page, this.page_count)
         .then(res => {
           if (res.code === 200) {
-            this.$message({
-              message: "查询成功",
-              center: true,
-              type: "success",
-              customClass: "hint-message"
-            });
-            this.$store.commit("RECEIVE_TWO_SRC", res.data);
+            if (this.inputTwoSrc || this.selectOneSrc) {
+              this.$message({
+                message: '查询成功',
+                center: true,
+                type: 'success',
+                customClass: 'hint-message'
+              })
+            }
+            this.two_src_count = res.count
+            this.$store.commit('RECEIVE_TWO_SRC', res.data)
           }
         })
         .catch(err => {
-          console.log(err, "err");
-        });
-      this.inputTwoSrc = "";
+          console.log(err, 'err')
+        })
     },
-    handleAdd() {
-      this.title = "添加资源";
-      this.dialogFormVisible = true;
+    change (p) {
+      this.page = p
+      this.get_data()
+    },
+    query () {
+      // 查询
+      this.page = 1
+      this.get_data()
+    },
+    handleAdd () {
+      this.title = '添加资源'
+      this.dialogFormVisible = true
     }
   },
   computed: {
     two_src: {
-      get() {
+      get () {
         return this.$store.getters.two_src.map((item, index) => {
-          item["key"] = index + 1;
-          return item;
-        });
+          item['key'] = index + 1
+          return item
+        })
       }
     },
-    two_src_count() {
-      return this.$store.getters.two_src_count;
-    },
-    one_src() {
-      return this.$store.getters.one_src;
+    one_src () {
+      return this.$store.getters.one_src
     }
   }
-};
+}
 </script>
 <style lang="scss" scoped>
-.top-wrap {
-  &_head {
-    width: 35%;
+  .top-wrap {
+    &_head {
+      width: 35%;
+    }
   }
-}
 </style>

@@ -12,9 +12,9 @@
         <el-input size="small" v-model="inputUserName" placeholder="请输入内容" label="姓名" clearable>
           <template slot="prepend">姓名：</template>
         </el-input>
-        <el-input size="small" v-model="inputGroup" placeholder="请输入内容" label="会员分组" clearable>
-          <template slot="prepend">会员分组：</template>
-        </el-input>
+        <!--        <el-input size="small" v-model="inputGroup" placeholder="请输入内容" label="会员分组" clearable>-->
+        <!--          <template slot="prepend">会员分组：</template>-->
+        <!--        </el-input>-->
         <el-input size="small" v-model="inputEmail" placeholder="请输入内容" label="邮箱" clearable>
           <template slot="prepend">邮箱：</template>
         </el-input>
@@ -25,84 +25,89 @@
       </div>
     </div>
     <div class="table_content">
-    <el-table
-      ref="multipleTable"
-      :data="users"
-      tooltip-effect="dark"
-      style="width: 100%"
-      @selection-change="handleSelectionChange">
-      <el-table-column
-        type="selection"
-        width="55">
-      </el-table-column>
-      <el-table-column
-        prop="key"
-        label="序号"
-        width="80">
-      </el-table-column>
-      <el-table-column
-        prop="login_name"
-        label="用户名"
-        width="120"
-        show-overflow-tooltip>
-      </el-table-column>
-      <el-table-column
-        prop="user_name"
-        label="昵称"
-        width="120"
-        show-overflow-tooltip>
-      </el-table-column>
-      <el-table-column
-        prop="group_name"
-        label="分组名"
-        width="120"
-        show-overflow-tooltip>
-      </el-table-column>
-      <el-table-column
-        prop="total"
-        label="点数"
-        width="80"
-        show-overflow-tooltip>
-      </el-table-column>
-      <el-table-column
-        prop="add_time"
-        label="注册时间"
-        show-overflow-tooltip>
-      </el-table-column>
-      <el-table-column
-        prop="end_time"
-        label="有效期至"
-        show-overflow-tooltip>
-      </el-table-column>
-      <el-table-column
-        prop="last_login_ip"
-        label="上次登录ip"
-        show-overflow-tooltip>
-      </el-table-column>
-      <el-table-column
-        prop="cur_login_ip"
-        label="本次登陆ip"
-        show-overflow-tooltip>
-      </el-table-column>
-      <el-table-column label="操作">
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            @click="handleView(scope.$index, scope.row)">查看
-          </el-button>
-          <el-button
-            size="mini"
-            @click="handleEdit(scope.$index, scope.row)">编辑
-          </el-button>
-          <el-button
-            size="mini"
-            type="danger"
-            @click="handleDelete(scope.$index, scope.row)">删除
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <Pagination :total="user_count" :type="'user'"/>
+      <el-table
+        ref="multipleTable"
+        :data="users"
+        tooltip-effect="dark"
+        style="width: 100%"
+        @selection-change="handleSelectionChange">
+        <el-table-column
+          type="selection"
+          width="55">
+        </el-table-column>
+        <el-table-column
+          prop="key"
+          label="序号"
+          width="80">
+        </el-table-column>
+        <el-table-column
+          prop="login_name"
+          label="用户名"
+          width="120"
+          show-overflow-tooltip>
+        </el-table-column>
+        <el-table-column
+          prop="user_name"
+          label="昵称"
+          width="120"
+          show-overflow-tooltip>
+        </el-table-column>
+        <el-table-column
+          prop="group_name"
+          label="分组名"
+          width="120"
+          show-overflow-tooltip>
+        </el-table-column>
+        <el-table-column
+          prop="total"
+          label="点数"
+          width="80"
+          show-overflow-tooltip>
+        </el-table-column>
+        <el-table-column
+          prop="add_time"
+          label="注册时间"
+          show-overflow-tooltip>
+        </el-table-column>
+        <el-table-column
+          prop="end_time"
+          label="有效期至"
+          show-overflow-tooltip>
+        </el-table-column>
+        <el-table-column
+          prop="last_login_ip"
+          label="上次登录ip"
+          show-overflow-tooltip>
+        </el-table-column>
+        <el-table-column
+          prop="cur_login_ip"
+          label="本次登陆ip"
+          show-overflow-tooltip>
+        </el-table-column>
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-button
+              size="mini"
+              @click="handleView(scope.$index, scope.row)">查看
+            </el-button>
+            <el-button
+              size="mini"
+              @click="handleEdit(scope.$index, scope.row)">编辑
+            </el-button>
+            <el-button
+              size="mini"
+              type="danger"
+              @click="handleDelete(scope.$index, scope.row)">删除
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-pagination
+        layout="prev, pager, next"
+        :total="user_count"
+        :page-size="page_count"
+        @current-change="change">
+      </el-pagination>
     </div>
     <el-dialog :title="title" :visible.sync="dialogFormVisible">
       <div v-if="title === '查看'">
@@ -259,11 +264,14 @@ export default {
       inputLoginName: '',
       inputUserName: '',
       inputGroup: '',
-      inputEmail: ''
+      inputEmail: '',
+      page: 1,
+      user_count: 0,
+      page_count: 10
     }
   },
   mounted () {
-    this.update()
+    this.get_user_data()
   },
   components: { Pagination },
   methods: {
@@ -374,25 +382,32 @@ export default {
       })
     },
     query () {
-      this.$http.getQueryUser(this.inputGroup, this.inputLoginName, this.inputUserName, this.inputEmail).then(res => {
+      this.page = 1
+      this.get_user_data()
+    },
+
+    change (p) {
+      this.page = p
+      this.get_user_data()
+    },
+
+    get_user_data () {
+      this.$http.getUser(this.inputGroup, this.inputLoginName, this.inputUserName, this.inputEmail, this.page, this.page_count).then(res => {
         if (res.code === 200) {
-          this.$message({
-            message: '查询成功',
-            center: true,
-            type: 'success',
-            customClass: 'hint-message'
-          })
+          if (this.inputGroup || this.inputLoginName || this.inputUserName || this.inputEmail) {
+            this.$message({
+              message: '查询成功',
+              center: true,
+              type: 'success',
+              customClass: 'hint-message'
+            })
+          }
+          this.user_count = res.count
           this.$store.commit('RECEIVE_USER', res.data)
         }
       }).catch(err => {
         console.log(err, 'err')
       })
-      this.input_login_name = ''
-      this.input_user_name = ''
-    },
-    update () {
-      this.$store.dispatch('action_get_user', 1)
-      this.$store.dispatch('action_get_user_count')
     },
   },
   computed: {
@@ -402,9 +417,6 @@ export default {
         item['total'] = '暂无点数'
         return item
       })
-    },
-    user_count () {
-      return this.$store.getters.user_count
     },
     groups () {
       let tmp = this.$store.getters.groups
@@ -418,9 +430,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.top-wrap {
-  &_head {
-    width: 72%;
+  .top-wrap {
+    &_head {
+      width: 72%;
+    }
   }
-}
 </style>

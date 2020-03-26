@@ -47,6 +47,8 @@ export const getAdminLoginLogCount = () => ajax.get(`/api/operation/get_admin_lo
 // ===================用户====================
 // 获取用户与用户列表
 export const getUsers = (p, n = 10) => ajax.get(`/api/user/get_users/?p=${p}&n=${n}`)
+// 查询和获取数据
+export const getUser = (group_id = '', login_name = '', user_name = '', email = '', p = 1, n = 10) => ajax.get(`/api/user/get_user/?group_id=${group_id}&login_name=${login_name}&user_name=${user_name}&email=${email}&p=${p}&n=${n}`)
 // 获取所有用户条数
 export const getUserCount = () => ajax.get(`/api/user/get_user_count/`)
 // 获取用户详情
@@ -66,11 +68,15 @@ export const getGroupsInfoApi = (id) => ajax.get(`/api/user/get_group_info/?id=$
 export const putGroupApi = (params) => ajax.post(`/api/user/update_group/`, params)
 //添加会员分组
 export const postGroupApi = (params) => ajax.post(`/api/user/add_group/`, params)
+// 根据会员分组 获取当前分组有哪些资源分类
+export const getGroupOneSrc = (id, p, n = 10) => ajax.get(`/api/user/to_group_one_src/?id=${id}&p=${p}&n=${n}`)
 // ===================资源=====================
 // // 一级资源
 // export const getOneSrc = () => ajax.get(`/api/src/get_one_src_info/`)
 // 获取一级资源分页数据
 export const getOneSrcPage = (p, n = 10) => ajax.get(`/api/src/get_one_src_page_data/?p=${p}&n=${n}`)
+// 查询和获取一级数据
+export const getOneSrc = (name, p = 1, n = 10) => ajax.get(`/api/src/get_one_src/?name=${name}&p=${p}&n=${n}`)
 // 获取一级资源的数据总数
 export const getOneSrcCount = () => ajax.get(`/api/src/get_one_src_page_count/`)
 // 获取一级资源的详情
@@ -79,20 +85,21 @@ export const getOneSrcInfo = (id) => ajax.get(`/api/src/get_one_src_info/?id=${i
 export const postUpdateOneSrc = (data) => ajax.post(`/api/src/update_one_src/`, data)
 // 查询一级资源
 export const queryOneSrc = (name) => ajax.get(`/api/src/get_to_name_one_src/?name=${name}`)
-// // 二级资源
-// export const getTwoSrc = () => ajax.get(`/api/src/get_two_src_info/`)
+// 二级资源
 // 获取二级资源的所有条数
-export const getTwoSrcCount = () => ajax.get(`/api/src/get_two_src_page_count/`)
-// 获取二级资源分页
-export const getTwoSrcPage = (p, n = 10) => ajax.get(`/api/src/get_two_src_page_data/?p=${p}&n=${n}`)
+// export const getTwoSrcCount = () => ajax.get(`/api/src/get_two_src_page_count/`)
+// // 获取二级资源分页
+// export const getTwoSrcPage = (p, n = 10) => ajax.get(`/api/src/get_two_src_page_data/?p=${p}&n=${n}`)
+// 查询和获取数据
+export const getTwoSrc = (name, one_src_id, p = 1, n = 10) => ajax.get(`/api/src/get_two_src/?name=${name}&one_src_id=${one_src_id}&p=${p}&n=${n}`)
 // 根据二级资源id获取数据详情
 export const getTwoSrcDetail = (id) => ajax.get(`/api/src/get_two_src_info/?id=${id}`)
 // 修改二级分类
 export const postUpdateTwoSrc = (data) => ajax.post(`/api/src/update_two_src/`, data)
 // 添加二级分类
 export const postAddTwoSrc = (data) => ajax.post(`/api/src/add_two_src/`, data)
-// 查询二级资源
-export const queryTwoSrc = (name, one_src_id) => ajax.get(`/api/src/query_two_src/?name=${name}&one_src_id=${one_src_id}`)
+// 获取所有二级资源---用于编辑三级资源
+export const getTwoSrcAll = () => ajax.get(`/api/src/get_two_src_info/`)
 
 //三级资源入口
 // 获取分页数据
@@ -108,6 +115,8 @@ export const postUpdateThreeSrc = (data) => ajax.post(`/api/src/update_three_src
 
 // 获取账号资源分页
 export const getFourSrcPage = (p, n = 10) => ajax.get(`/api/src/get_four_src_page_data/?p=${p}&n=${n}`)
+// 查询和获取账号
+export const getFourSrc = (name, code, p = 1, n = 10) => ajax.get(`/api/src/get_four_src/?name=${name}&code=${code}&p=${p}&n=${n}`)
 // 获取账号资源的所有条数
 export const getFourSrcCount = () => ajax.get(`/api/src/get_four_src_page_count/`)
 // 查看账号资源详情
